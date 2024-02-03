@@ -3,7 +3,6 @@ package com.example.sunshineserver.user;
 import com.example.sunshineserver.user.domain.CharacterType;
 import com.example.sunshineserver.user.domain.Gender;
 import com.example.sunshineserver.user.domain.Stat;
-import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.service.UserService;
@@ -26,6 +25,16 @@ public class UserServiceTest {
     @Test
     void 회원가입을_진행한다() {
         // given
+        UserCreateRequest request = 유저_생성_요청();
+
+        // when
+        userService.create(request);
+
+        // then
+        Assertions.assertThat(userPort.findAll()).hasSize(1);
+    }
+
+    private static UserCreateRequest 유저_생성_요청() {
         String name = "홍길동";
         Gender gender = Gender.MALE;
         LocalDate birthDay = LocalDate.of(1999, 3, 27);
@@ -34,12 +43,7 @@ public class UserServiceTest {
 
         UserCreateRequest request = new UserCreateRequest(name, gender,
             birthDay, characterType, stat);
-
-        // when
-        userService.create(request);
-
-        // then
-        Assertions.assertThat(userPort.findAll()).hasSize(1);
+        return request;
     }
 
 }

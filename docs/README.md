@@ -41,5 +41,5 @@
     - [ ] 이름, 레벨, 경험치, 스탯, 캐릭터 사진 등을 확인한다
 
 ### 추가 사항 
-- [ ] BaseEntity를 추가한다
-  - [ ] createdAt, updatedAt 필드를 추가한다
+- [x] BaseEntity를 생성한다
+  - [x] createdAt, updatedAt 필드를 추가한다
