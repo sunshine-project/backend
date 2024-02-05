@@ -1,5 +1,6 @@
 package com.example.sunshineserver.quest.application;
 
+import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryRequest;
@@ -8,6 +9,7 @@ import com.example.sunshineserver.quest.presentation.dto.QuestDetailRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
+import com.example.sunshineserver.user.domain.User;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +51,10 @@ public class QuestService {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 퀘스트입니다."));
 
         return QuestDetailResponse.of(userQuest);
+    }
+
+    public void assignQuest(User user, QuestTemplate questTemplate) {
+
+        userQuestPort.save(UserQuest.of(questTemplate, user));
     }
 }

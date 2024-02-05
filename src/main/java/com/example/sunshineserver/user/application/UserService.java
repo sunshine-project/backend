@@ -5,6 +5,7 @@ import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,9 @@ public class UserService {
             request.characterType(),
             request.stat());
         return userPort.save(user);
+    }
+
+    public List<User> findAllUsers() {
+        return userPort.findAll();
     }
 }
