@@ -1,13 +1,10 @@
 package com.example.sunshineserver.user;
 
-import com.example.sunshineserver.user.domain.CharacterType;
-import com.example.sunshineserver.user.domain.Gender;
-import com.example.sunshineserver.user.domain.Stat;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
-import com.example.sunshineserver.user.service.UserService;
-import java.time.LocalDate;
+import com.example.sunshineserver.user.application.UserService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,11 +18,15 @@ public class UserServiceTest {
     @Autowired
     private UserPort userPort;
 
+    @BeforeEach
+    void setUp() {
+        userPort.deleteAll();
+    }
 
     @Test
     void 회원가입을_진행한다() {
         // given
-        UserCreateRequest request = 유저_생성_요청();
+        UserCreateRequest request = UserSteps.유저_생성_요청();
 
         // when
         userService.create(request);
@@ -33,17 +34,4 @@ public class UserServiceTest {
         // then
         Assertions.assertThat(userPort.findAll()).hasSize(1);
     }
-
-    private static UserCreateRequest 유저_생성_요청() {
-        String name = "홍길동";
-        Gender gender = Gender.MALE;
-        LocalDate birthDay = LocalDate.of(1999, 3, 27);
-        CharacterType characterType = CharacterType.A;
-        Stat stat = Stat.of(1, 1, 1, 1);
-
-        UserCreateRequest request = new UserCreateRequest(name, gender,
-            birthDay, characterType, stat);
-        return request;
-    }
-
 }
