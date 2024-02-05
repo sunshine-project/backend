@@ -12,15 +12,24 @@ public class ExperiencePoint {
 
     private int experiencePoint;
 
-    public ExperiencePoint(int experiencePoint) {
+    private ExperiencePoint(int experiencePoint) {
         this.experiencePoint = experiencePoint;
     }
 
-    public static ExperiencePoint of(final int experiencePoint) {
+    public static ExperiencePoint from(final int experiencePoint) {
         return new ExperiencePoint(experiencePoint);
     }
 
-    public int getExperiencePoint() {
+    public static ExperiencePoint initial() {
+        return new ExperiencePoint(0);
+    }
+
+    public int get() {
         return experiencePoint;
     }
+
+    public ExperiencePoint add(ExperiencePoint questExperiencePoint) {
+        return ExperiencePoint.from(this.experiencePoint + questExperiencePoint.experiencePoint);
+    }
+
 }

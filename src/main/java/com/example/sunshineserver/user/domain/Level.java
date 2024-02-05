@@ -3,26 +3,31 @@ package com.example.sunshineserver.user.domain;
 import java.util.Arrays;
 
 public enum Level {
-    LV1(1, 0, 100),
-    LV2(2, 100, 200),
-    LV3(3, 200, 300),
-    LV4(4, 300, 400),
-    LV5(5, 400, 500);
+    LV1(1, 0, 1000),
+    LV2(2, 1000, 2500),
+    LV3(3, 2500, 4000),
+    LV4(4, 4000, 6000),
+    LV5(5, 6000, 10000);
 
-    private int level;
-    private int minExp;
-    private int maxExp;
+    private final int level;
+    private final int inclusiveRange;
+    private final int exclusiveRange;
 
-    Level(int level, int minExp, int maxExp) {
+    Level(int level, int inclusiveRange, int exclusiveRange) {
         this.level = level;
-        this.minExp = minExp;
-        this.maxExp = maxExp;
+        this.inclusiveRange = inclusiveRange;
+        this.exclusiveRange = exclusiveRange;
     }
 
-    public static Level of(int level) {
+    public int getLevel() {
+        return level;
+    }
+
+    public static Level from(Integer experience) {
         return Arrays.stream(Level.values())
-            .filter(lv -> lv.level == level)
+            .filter(
+	level -> level.inclusiveRange <= experience && level.exclusiveRange > experience)
             .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new IllegalArgumentException("해당하는 레벨이 없습니다."));
     }
 }
