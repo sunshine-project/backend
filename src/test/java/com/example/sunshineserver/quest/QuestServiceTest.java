@@ -7,8 +7,10 @@ import com.example.sunshineserver.quest.domain.StatInfo;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
+import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
+import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import com.example.sunshineserver.user.UserSteps;
 import com.example.sunshineserver.user.application.UserService;
 import com.example.sunshineserver.user.domain.ExperiencePoint;
@@ -96,7 +98,31 @@ public class QuestServiceTest {
         List<UserQuest> quests = questService.findUncheckedQuests(request);
 
         // then
-        Assertions.assertThat(quests.size()).isEqualTo(2);
+        Assertions.assertThat(quests.size()).isEqualTo(3);
+    }
+
+    @Test
+    void 조건에_따라_퀘스트들을_조회한다() {
+        // given
+        Long userId = userService.create(UserSteps.유저_생성_요청());
+        복수의_테스트_퀘스트_생성(userId);
+
+        List<UserQuest> quests = userQuestPort.findAll();
+        QuestCompleteRequest request = new QuestCompleteRequest(userId, quests.get(0).getId());
+        CompletedQuestsInquiryRequest completedQuestsInquiryRequest = new CompletedQuestsInquiryRequest(
+            userId);
+        UncompletedQuestsInquiryRequest uncompletedQuestsInquiryRequest = new UncompletedQuestsInquiryRequest(
+            userId);
+        // when
+        questService.completeQuest(request);
+
+        // then
+        // 완료한 퀘스트 1개, 미완료한 퀘스트 2개
+        Assertions.assertThat(
+            questService.findCompletedQuests(completedQuestsInquiryRequest).size()).isEqualTo(1);
+        Assertions.assertThat(
+	questService.findUncompletedQuests(uncompletedQuestsInquiryRequest).size())
+            .isEqualTo(2);
     }
 
     private QuestTemplate 테스트_퀘스트_생성() {
@@ -116,9 +142,14 @@ public class QuestServiceTest {
             ExperiencePoint.from(200), QuestionType.ROUTINE,
             StatInfo.of(StatType.STR, 1), null, true, false);
 
+        QuestTemplate quest3 = new QuestTemplate(3, "책 읽기", "책을 30분 동안 읽고 인증하세요",
+            ExperiencePoint.from(300), QuestionType.TIMER,
+            StatInfo.of(StatType.SPI, 1), 30, false, false);
+
         userPort.findById(userId).ifPresent(user -> {
             userQuestPort.save(UserQuest.of(quest1, user));
             userQuestPort.save(UserQuest.of(quest2, user));
+            userQuestPort.save(UserQuest.of(quest3, user));
         });
     }
 }
