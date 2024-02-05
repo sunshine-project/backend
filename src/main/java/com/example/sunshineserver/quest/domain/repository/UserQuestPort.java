@@ -12,4 +12,8 @@ public interface UserQuestPort {
     Long save(UserQuest userQuest);
 
     List<UserQuest> findAll();
+
+    List<UserQuest> findUncheckedQuests(long userId);
+
+    void deleteAll();
 }

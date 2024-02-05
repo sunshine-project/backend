@@ -2,6 +2,7 @@ package com.example.sunshineserver.quest.domain;
 
 import com.example.sunshineserver.global.domain.BaseEntity;
 import com.example.sunshineserver.user.domain.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,12 +24,14 @@ public class UserQuest extends BaseEntity {
     @Column(name = "user_quest_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private QuestTemplate questTemplate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
     boolean isCompleted = false;
+
     boolean isChecked = false;
 
     private String photoUrl;
@@ -49,5 +52,9 @@ public class UserQuest extends BaseEntity {
 
     public static UserQuest of(QuestTemplate questTemplate, User user) {
         return new UserQuest(questTemplate, user);
+    }
+
+    public void check() {
+        this.isChecked = true;
     }
 }
