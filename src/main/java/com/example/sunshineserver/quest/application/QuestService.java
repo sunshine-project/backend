@@ -4,6 +4,8 @@ import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
+import com.example.sunshineserver.quest.presentation.dto.QuestDetailRequest;
+import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import jakarta.transaction.Transactional;
@@ -40,5 +42,12 @@ public class QuestService {
 
     public List<UserQuest> findUncompletedQuests(UncompletedQuestsInquiryRequest request) {
         return userQuestPort.findUncompletedQuests(request.userId());
+    }
+
+    public QuestDetailResponse findQuestDetail(QuestDetailRequest request) {
+        UserQuest userQuest = userQuestPort.findById(request.questId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 퀘스트입니다."));
+
+        return QuestDetailResponse.of(userQuest);
     }
 }
