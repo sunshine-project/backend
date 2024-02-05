@@ -20,12 +20,17 @@ class UserAdapter implements UserPort {
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
+    public Long save(User user) {
+        return userRepository.save(user).getId();
     }
 
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public void deleteAll() {
+        userRepository.deleteAll();
     }
 }

@@ -2,7 +2,7 @@ package com.example.sunshineserver.user.presentation;
 
 import com.example.sunshineserver.global.domain.RequestURI;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
-import com.example.sunshineserver.user.service.UserService;
+import com.example.sunshineserver.user.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

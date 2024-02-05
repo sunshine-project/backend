@@ -1,4 +1,4 @@
-package com.example.sunshineserver.user.service;
+package com.example.sunshineserver.user.application;
 
 
 import com.example.sunshineserver.user.domain.User;
@@ -15,7 +15,7 @@ public class UserService {
 
     private final UserPort userPort;
 
-    public User create(UserCreateRequest request) {
+    public Long create(UserCreateRequest request) {
         User user = User.of(request.name(),
             request.gender(),
             request.birthDay(),

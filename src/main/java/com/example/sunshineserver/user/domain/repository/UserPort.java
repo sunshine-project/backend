@@ -10,7 +10,9 @@ public interface UserPort {
 
     Optional<User> findById(Long id);
 
-    User save(User user);
+    Long save(User user);
 
     List<User> findAll();
+
+    void deleteAll();
 }
