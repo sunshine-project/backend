@@ -9,6 +9,8 @@ import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepositor
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
+import com.example.sunshineserver.quest.presentation.dto.QuestDetailRequest;
+import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import com.example.sunshineserver.user.UserSteps;
@@ -123,6 +125,30 @@ public class QuestServiceTest {
         Assertions.assertThat(
 	questService.findUncompletedQuests(uncompletedQuestsInquiryRequest).size())
             .isEqualTo(2);
+    }
+
+    @Test
+    void 퀘스트_상세_내용을_조회한다() {
+        // given
+        Long userId = userService.create(UserSteps.유저_생성_요청());
+        QuestTemplate questTemplate = 테스트_퀘스트_생성();
+
+        User user = userPort.findById(userId).orElseThrow(RuntimeException::new);
+        Long userQuestId = userQuestPort.save(UserQuest.of(questTemplate, user));
+
+        QuestDetailRequest request = new QuestDetailRequest(userQuestId);
+
+        // when
+        QuestDetailResponse response = questService.findQuestDetail(request);
+
+        // then
+        Assertions.assertThat(response.title()).isEqualTo("스트레칭");
+        Assertions.assertThat(response.description()).isEqualTo("30초 동안 스트레칭을 실시하세요");
+        Assertions.assertThat(response.experiencePoint().get()).isEqualTo(100);
+        Assertions.assertThat(response.statInfo().getStatType()).isEqualTo(StatType.STR);
+        Assertions.assertThat(response.statInfo().getStatValue()).isEqualTo(1);
+        Assertions.assertThat(response.questionType()).isEqualTo(QuestionType.TIMER);
+        Assertions.assertThat(response.timeLimit()).isEqualTo(15);
     }
 
     private QuestTemplate 테스트_퀘스트_생성() {
