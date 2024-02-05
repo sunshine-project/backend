@@ -67,6 +67,27 @@ public class QuestServiceTest {
         Assertions.assertThat(findUser.getExperiencePoint().get()).isEqualTo(100);
     }
 
+    @Test
+    void 이미_완료한_퀘스트는_예외를_발생한다() {
+        // given
+        Long userId = userService.create(UserSteps.유저_생성_요청());
+        Long questId = 테스트_퀘스트_생성();
+
+        User user = userPort.findById(userId).orElseThrow(RuntimeException::new);
+        QuestTemplate questTemplate = questTemplateRepository.findById(questId)
+            .orElseThrow(RuntimeException::new);
+
+        Long userQuestId = userQuestPort.save(UserQuest.of(questTemplate, user));
+
+        QuestCompleteRequest request = new QuestCompleteRequest(userId, userQuestId);
+
+        questService.completeQuest(request);
+
+        // when & then
+        Assertions.assertThatThrownBy(() -> questService.completeQuest(request))
+            .isInstanceOf(IllegalStateException.class);
+    }
+
     private Long 테스트_퀘스트_생성() {
         QuestTemplate quest1 = new QuestTemplate(1, "스트레칭", "30초 동안 스트레칭을 실시하세요",
             ExperiencePoint.from(100), QuestionType.TIMER,
