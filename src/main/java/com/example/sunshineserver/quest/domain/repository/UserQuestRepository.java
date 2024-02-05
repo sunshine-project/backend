@@ -6,5 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserQuestRepository extends JpaRepository<UserQuest, Long> {
 
-    List<UserQuest> findByIsCheckedFalseAndUserId(long userId);
+    List<UserQuest> findByIsCheckedFalseAndUserId(Long userId);
+
+    List<UserQuest> findByIsCompletedTrueAndUserId(Long userId);
+
+    List<UserQuest> findByIsCompletedFalseAndUserId(Long userId);
 }

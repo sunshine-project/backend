@@ -38,4 +38,14 @@ public class UserQuestAdapter implements UserQuestPort {
     public void deleteAll() {
         userQuestRepository.deleteAll();
     }
+
+    @Override
+    public List<UserQuest> findCompletedQuests(Long userId) {
+        return userQuestRepository.findByIsCompletedTrueAndUserId(userId);
+    }
+
+    @Override
+    public List<UserQuest> findUncompletedQuests(Long userId) {
+        return userQuestRepository.findByIsCompletedFalseAndUserId(userId);
+    }
 }

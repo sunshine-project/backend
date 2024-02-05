@@ -16,4 +16,8 @@ public interface UserQuestPort {
     List<UserQuest> findUncheckedQuests(long userId);
 
     void deleteAll();
+
+    List<UserQuest> findCompletedQuests(Long userId);
+
+    List<UserQuest> findUncompletedQuests(Long aLong);
 }

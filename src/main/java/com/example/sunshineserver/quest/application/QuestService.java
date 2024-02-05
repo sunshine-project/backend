@@ -2,8 +2,10 @@ package com.example.sunshineserver.quest.application;
 
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
+import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
+import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,13 @@ public class QuestService {
             .forEach(userQuest -> userQuest.check());
 
         return userQuests;
+    }
+
+    public List<UserQuest> findCompletedQuests(CompletedQuestsInquiryRequest request) {
+        return userQuestPort.findCompletedQuests(request.userId());
+    }
+
+    public List<UserQuest> findUncompletedQuests(UncompletedQuestsInquiryRequest request) {
+        return userQuestPort.findUncompletedQuests(request.userId());
     }
 }
