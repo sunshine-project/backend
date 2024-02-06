@@ -54,7 +54,6 @@ public class QuestService {
     }
 
     public void assignQuest(User user, QuestTemplate questTemplate) {
-
         userQuestPort.save(UserQuest.of(questTemplate, user));
     }
 }

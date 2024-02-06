@@ -63,7 +63,7 @@ public class QuestServiceTest {
         QuestCompleteRequest request = new QuestCompleteRequest(userId, userQuestId);
 
         // when
-        questService.completeQuest(request);
+        questService.complete(request);
 
         // then
         User findUser = userPort.findById(userId).orElseThrow(RuntimeException::new);
@@ -81,10 +81,10 @@ public class QuestServiceTest {
 
         QuestCompleteRequest request = new QuestCompleteRequest(userId, userQuestId);
 
-        questService.completeQuest(request);
+        questService.complete(request);
 
         // when & then
-        Assertions.assertThatThrownBy(() -> questService.completeQuest(request))
+        Assertions.assertThatThrownBy(() -> questService.complete(request))
             .isInstanceOf(IllegalStateException.class);
     }
 
@@ -116,7 +116,7 @@ public class QuestServiceTest {
         UncompletedQuestsInquiryRequest uncompletedQuestsInquiryRequest = new UncompletedQuestsInquiryRequest(
             userId);
         // when
-        questService.completeQuest(request);
+        questService.complete(request);
 
         // then
         // 완료한 퀘스트 1개, 미완료한 퀘스트 2개
