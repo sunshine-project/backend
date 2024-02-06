@@ -22,7 +22,7 @@ public class QuestService {
 
     private final UserQuestPort userQuestPort;
 
-    public void completeQuest(QuestCompleteRequest request) {
+    public void complete(QuestCompleteRequest request) {
         UserQuest userQuest = userQuestPort.findById(request.questId())
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 퀘스트입니다."));
 

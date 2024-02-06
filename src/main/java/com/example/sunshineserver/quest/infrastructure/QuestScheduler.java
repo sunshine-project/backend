@@ -4,10 +4,8 @@ import com.example.sunshineserver.quest.application.QuestService;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
 import com.example.sunshineserver.user.application.UserService;
-import com.example.sunshineserver.user.domain.User;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,14 +23,12 @@ public class QuestScheduler {
     public void assignQuestDaily() {
         LocalDate currentDate = LocalDate.now();
 
-        List<User> users = userService.findAllUsers();
-
-        for (User user : users) {
+        userService.findAllUsers().stream().forEach(user -> {
             LocalDate userCreationDate = user.getCreatedAt().toLocalDate();
             QuestTemplate questTemplate = determineQuestTemplate(userCreationDate, currentDate);
 
             questService.assignQuest(user, questTemplate);
-        }
+        });
     }
 
     private QuestTemplate determineQuestTemplate(LocalDate userCreationDate,
