@@ -57,4 +57,8 @@ public class UserQuest extends BaseEntity {
     public void check() {
         this.isChecked = true;
     }
+
+    public boolean isUnchecked() {
+        return !isChecked;
+    }
 }

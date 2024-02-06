@@ -47,4 +47,8 @@ public class Stat {
 	throw new IllegalArgumentException("잘못된 스탯 타입입니다.");
         }
     }
+
+    public boolean isAbleToEndGame() {
+        return this.str >= 50 && this.spi >= 50 && this.pea >= 50 && this.skl >= 50;
+    }
 }

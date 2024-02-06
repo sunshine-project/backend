@@ -85,4 +85,13 @@ public class User extends BaseEntity {
     public void calculateLevel() {
         this.level = Level.from(experiencePoint.get());
     }
+
+    public boolean isQuestExisted() {
+        return userQuests.stream()
+            .anyMatch(UserQuest::isUnchecked);
+    }
+
+    public boolean isAbleToEndGame() {
+        return stat.isAbleToEndGame();
+    }
 }

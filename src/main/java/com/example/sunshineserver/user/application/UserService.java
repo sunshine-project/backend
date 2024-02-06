@@ -4,6 +4,7 @@ package com.example.sunshineserver.user.application;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
+import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,12 @@ public class UserService {
 
     public List<User> findAllUsers() {
         return userPort.findAll();
+    }
+
+    public UserHomeResponse findHome(Long userId) {
+        User user = userPort.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        return UserHomeResponse.from(user);
     }
 }

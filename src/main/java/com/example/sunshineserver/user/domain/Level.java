@@ -23,6 +23,10 @@ public enum Level {
         return level;
     }
 
+    public int getExclusiveRange() {
+        return exclusiveRange;
+    }
+
     public static Level from(Integer experience) {
         return Arrays.stream(Level.values())
             .filter(
