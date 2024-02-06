@@ -24,7 +24,7 @@ public class QuestTemplate {
     private Long id;
 
     @Column(unique = true)
-    private int QuestionDay;
+    private int questionDay;
     String title;
     String description;
 
@@ -41,10 +41,10 @@ public class QuestTemplate {
     private boolean requiresPhoto;
     private boolean requiresReflection;
 
-    public QuestTemplate(int QuestionDay, String title, String description,
+    public QuestTemplate(int questionDay, String title, String description,
         ExperiencePoint experiencePoint, QuestionType questionType, StatInfo statInfo,
         Integer timeLimit, boolean requiresPhoto, boolean requiresReflection) {
-        this.QuestionDay = QuestionDay;
+        this.questionDay = questionDay;
         this.title = title;
         this.description = description;
         this.experiencePoint = experiencePoint;
