@@ -2,8 +2,10 @@ package com.example.sunshineserver.quest.infrastructure;
 
 import com.example.sunshineserver.quest.application.QuestService;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
+import com.example.sunshineserver.quest.domain.QuestTimer;
 import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
 import com.example.sunshineserver.user.application.UserService;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,12 @@ public class QuestScheduler {
     private final QuestService questService;
     private final UserService userService;
     private final QuestTemplateRepository questTemplateRepository;
+    private final QuestTimer questTimer;
 
     // 매일 자정에 실행됩니다.
     @Scheduled(cron = "0 0 0 * * *")
     public void assignQuestDaily() {
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = questTimer.now();
 
         userService.findAllUsers().stream().forEach(user -> {
             LocalDate userCreationDate = user.getCreatedAt().toLocalDate();
