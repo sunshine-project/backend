@@ -33,4 +33,9 @@ class UserAdapter implements UserPort {
     public void deleteAll() {
         userRepository.deleteAll();
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

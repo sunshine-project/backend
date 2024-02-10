@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,7 +34,16 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
@@ -54,18 +64,21 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserQuest> userQuests = new ArrayList<>();
 
-    public User(String name, Gender gender, LocalDate birthDay, CharacterType characterType,
+    public User(String email, String name, Gender gender, LocalDate birthDay,
+        CharacterType characterType,
         Stat stat) {
+        this.email = email;
         this.name = name;
         this.gender = gender;
         this.birthDay = birthDay;
         this.characterType = characterType;
         this.stat = stat;
+        this.role = Role.USER;
     }
 
-    public static User of(String name, Gender gender, LocalDate birthDay,
+    public static User of(String email, String name, Gender gender, LocalDate birthDay,
         CharacterType characterType, Stat stat) {
-        return new User(name, gender, birthDay, characterType, stat);
+        return new User(email, name, gender, birthDay, characterType, stat);
     }
 
     public void completeQuest(QuestTemplate questTemplate) {

@@ -6,7 +6,7 @@ import com.example.sunshineserver.user.domain.Stat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
-public record UserCreateRequest(String name, Gender gender, @JsonFormat(pattern = "yyyyMMdd") LocalDate birthDay,
+public record UserCreateRequest(String email, String name, Gender gender, @JsonFormat(pattern = "yyyyMMdd") LocalDate birthDay,
 		CharacterType characterType, Stat stat) {
 
 }

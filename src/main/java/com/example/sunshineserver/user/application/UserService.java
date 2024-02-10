@@ -1,38 +1,49 @@
 package com.example.sunshineserver.user.application;
 
 
+import com.example.sunshineserver.global.exception.UserAlreadyExistedException;
+import com.example.sunshineserver.global.exception.UserNotFoundException;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
+import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
-import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserPort userPort;
 
-    public Long create(UserCreateRequest request) {
-        User user = User.of(request.name(),
+    @Transactional
+    public UserCreateResponse create(UserCreateRequest request) {
+        if (userPort.findByEmail(request.email()).isPresent()) {
+            throw new UserAlreadyExistedException();
+        }
+
+        User user = User.of(request.email(),
+            request.name(),
             request.gender(),
             request.birthDay(),
             request.characterType(),
             request.stat());
-        return userPort.save(user);
+        Long userId = userPort.save(user);
+        return UserCreateResponse.from(userId);
     }
 
     public List<User> findAllUsers() {
         return userPort.findAll();
     }
 
-    public UserHomeResponse findHome(Long userId) {
+    public UserHomeResponse home(Long userId) throws UserNotFoundException {
         User user = userPort.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+            .orElseThrow(() -> new UserNotFoundException());
 
         return UserHomeResponse.from(user);
     }

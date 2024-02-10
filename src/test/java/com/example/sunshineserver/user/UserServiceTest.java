@@ -3,6 +3,7 @@ package com.example.sunshineserver.user;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.application.UserService;
+import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,10 +41,10 @@ public class UserServiceTest {
     void 홈_화면을_조회한다() {
         // given
         UserCreateRequest request = UserSteps.유저_생성_요청();
-        Long userId = userService.create(request);
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
 
         // when
-        UserHomeResponse response = userService.findHome(userId);
+        UserHomeResponse response = userService.home(userCreateResponse.userId());
 
         // then
         Assertions.assertThat(response).isNotNull();

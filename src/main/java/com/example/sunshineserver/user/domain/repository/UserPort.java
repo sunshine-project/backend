@@ -15,4 +15,6 @@ public interface UserPort {
     List<User> findAll();
 
     void deleteAll();
+
+    Optional<User> findByEmail(String email);
 }

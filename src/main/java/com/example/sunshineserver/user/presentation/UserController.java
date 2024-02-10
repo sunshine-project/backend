@@ -3,12 +3,15 @@ package com.example.sunshineserver.user.presentation;
 import com.example.sunshineserver.global.domain.RequestURI;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.application.UserService;
+import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,8 +32,8 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "회원 가입에 실패하였습니다."),
     })
-    public void create(@RequestBody UserCreateRequest request) {
-        userService.create(request);
+    public ResponseEntity<UserCreateResponse> create(@RequestBody UserCreateRequest request) {
+        return new ResponseEntity<>(userService.create(request), HttpStatus.OK);
     }
 
     @GetMapping
@@ -39,7 +42,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다."),
     })
-    public UserHomeResponse findHome(Long userId) {
-        return userService.findHome(userId);
+    public ResponseEntity<UserHomeResponse> home(Long userId) {
+        return new ResponseEntity<>(userService.home(userId), HttpStatus.OK);
     }
 }
