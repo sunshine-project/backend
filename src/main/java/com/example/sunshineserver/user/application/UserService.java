@@ -2,14 +2,13 @@ package com.example.sunshineserver.user.application;
 
 
 import com.example.sunshineserver.global.exception.UserAlreadyExistedException;
-import com.example.sunshineserver.global.exception.UserNotFoundException;
+import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +40,9 @@ public class UserService {
         return userPort.findAll();
     }
 
-    public UserHomeResponse home(Long userId) throws UserNotFoundException {
+    public UserHomeResponse home(Long userId) throws UserNotFoundedException {
         User user = userPort.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException());
+            .orElseThrow(() -> new UserNotFoundedException());
 
         return UserHomeResponse.from(user);
     }

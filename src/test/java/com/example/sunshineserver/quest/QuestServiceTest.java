@@ -11,6 +11,7 @@ import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryR
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
+import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import com.example.sunshineserver.user.UserSteps;
@@ -69,7 +70,8 @@ public class QuestServiceTest {
         questService.complete(request);
 
         // then
-        User findUser = userPort.findById(userCreateResponse.userId()).orElseThrow(RuntimeException::new);
+        User findUser = userPort.findById(userCreateResponse.userId())
+            .orElseThrow(RuntimeException::new);
         Assertions.assertThat(findUser.getExperiencePoint().get()).isEqualTo(100);
     }
 
@@ -116,7 +118,8 @@ public class QuestServiceTest {
         복수의_테스트_퀘스트_생성(userCreateResponse.userId());
 
         List<UserQuest> quests = userQuestPort.findAll();
-        QuestCompleteRequest request = new QuestCompleteRequest(userCreateResponse.userId(), quests.get(0).getId());
+        QuestCompleteRequest request = new QuestCompleteRequest(userCreateResponse.userId(),
+            quests.get(0).getId());
         CompletedQuestsInquiryRequest completedQuestsInquiryRequest = new CompletedQuestsInquiryRequest(
             userCreateResponse.userId());
         UncompletedQuestsInquiryRequest uncompletedQuestsInquiryRequest = new UncompletedQuestsInquiryRequest(
@@ -161,7 +164,7 @@ public class QuestServiceTest {
     private QuestTemplate 테스트_퀘스트_생성() {
         QuestTemplate questTemplate = new QuestTemplate(1, "스트레칭", "30초 동안 스트레칭을 실시하세요",
             ExperiencePoint.from(100), QuestionType.TIMER,
-            StatInfo.of(StatType.STR, 1), 15, false, false);
+            StatInfo.of(StatType.STR, 1), 15);
 
         return questTemplate;
     }
@@ -169,20 +172,57 @@ public class QuestServiceTest {
     private void 복수의_테스트_퀘스트_생성(Long userId) {
         QuestTemplate quest1 = new QuestTemplate(1, "스트레칭", "30초 동안 스트레칭을 실시하세요",
             ExperiencePoint.from(100), QuestionType.TIMER,
-            StatInfo.of(StatType.STR, 1), 15, false, false);
+            StatInfo.of(StatType.STR, 1), 15);
 
         QuestTemplate quest2 = new QuestTemplate(2, "이불 정리 하기", "이불을 정리하고 인증하세요",
             ExperiencePoint.from(200), QuestionType.ROUTINE,
-            StatInfo.of(StatType.STR, 1), null, true, false);
+            StatInfo.of(StatType.STR, 1), null);
 
         QuestTemplate quest3 = new QuestTemplate(3, "책 읽기", "책을 30분 동안 읽고 인증하세요",
             ExperiencePoint.from(300), QuestionType.TIMER,
-            StatInfo.of(StatType.SPI, 1), 30, false, false);
+            StatInfo.of(StatType.SPI, 1), 30);
 
         userPort.findById(userId).ifPresent(user -> {
             userQuestPort.save(UserQuest.of(quest1, user));
             userQuestPort.save(UserQuest.of(quest2, user));
             userQuestPort.save(UserQuest.of(quest3, user));
         });
+    }
+
+    @Test
+    void SHORT_ANSWER_유형의_퀘스트를_진행한다() {
+        // given
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
+
+        QuestTemplate questTemplate = SHORT_ANSWER_테스트_퀘스트_생성();
+        Long userQuestId = userQuestPort.save(UserQuest.of(questTemplate,
+            userPort.findById(userCreateResponse.userId()).orElseThrow(RuntimeException::new)));
+
+        String answer = "답변";
+
+        ShortAnswerQuestCompleteRequest request = new ShortAnswerQuestCompleteRequest(
+            userCreateResponse.userId(),
+            userQuestId, answer);
+
+        // when
+        questService.completeShortAnswerQuest(request);
+
+        // then
+        User user = userPort.findById(userCreateResponse.userId())
+            .orElseThrow(RuntimeException::new);
+        UserQuest userQuest = userQuestPort.findById(userQuestId)
+            .orElseThrow(RuntimeException::new);
+
+        Assertions.assertThat(user.getExperiencePoint().get()).isEqualTo(300);
+        Assertions.assertThat(user.getStat().getSpi()).isEqualTo(2);
+        Assertions.assertThat(userQuest.getShortAnswer()).isEqualTo(answer);
+        Assertions.assertThat(userQuest.isCompleted()).isTrue();
+        Assertions.assertThat(userQuest.getShortAnswer()).isEqualTo(answer);
+    }
+
+    private QuestTemplate SHORT_ANSWER_테스트_퀘스트_생성() {
+        return new QuestTemplate(1, "당신의 꿈은?", "당신의 꿈을 구체적으로 설명해주세요.",
+            ExperiencePoint.from(300), QuestionType.SHORT_ANSWER,
+            StatInfo.of(StatType.SPI, 1), null);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.sunshineserver.quest.application;
 
+import com.example.sunshineserver.global.exception.QuestNotExistedException;
+import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
@@ -7,9 +9,11 @@ import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryR
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
+import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import com.example.sunshineserver.user.domain.User;
+import com.example.sunshineserver.user.domain.repository.UserPort;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +25,23 @@ import org.springframework.stereotype.Service;
 public class QuestService {
 
     private final UserQuestPort userQuestPort;
+    private final UserPort userPort;
 
     public void complete(QuestCompleteRequest request) {
         UserQuest userQuest = userQuestPort.findById(request.questId())
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 퀘스트입니다."));
+            .orElseThrow(() -> new QuestNotExistedException());
 
         userQuest.complete();
+    }
+
+    public void completeShortAnswerQuest(ShortAnswerQuestCompleteRequest request) {
+        userPort.findById(request.userId())
+            .orElseThrow(() -> new UserNotFoundedException());
+
+        UserQuest userQuest = userQuestPort.findById(request.questId())
+            .orElseThrow(() -> new QuestNotExistedException());
+
+        userQuest.complete(request);
     }
 
     public List<UserQuest> findUncheckedQuests(UncheckedQuestsInquiryRequest request) {

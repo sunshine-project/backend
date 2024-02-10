@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,11 @@ public class QuestTemplate {
 
     @Column(unique = true)
     private int questionDay;
+
+    @NotNull
     String title;
+
+    @NotNull
     String description;
 
     @Embedded
@@ -38,12 +43,10 @@ public class QuestTemplate {
     StatInfo statInfo;
 
     private Integer timeLimit;
-    private boolean requiresPhoto;
-    private boolean requiresReflection;
 
     public QuestTemplate(int questionDay, String title, String description,
         ExperiencePoint experiencePoint, QuestionType questionType, StatInfo statInfo,
-        Integer timeLimit, boolean requiresPhoto, boolean requiresReflection) {
+        Integer timeLimit) {
         this.questionDay = questionDay;
         this.title = title;
         this.description = description;
@@ -51,7 +54,9 @@ public class QuestTemplate {
         this.questionType = questionType;
         this.statInfo = statInfo;
         this.timeLimit = timeLimit;
-        this.requiresPhoto = requiresPhoto;
-        this.requiresReflection = requiresReflection;
+    }
+
+    public boolean isShortAnswerQuest() {
+        return questionType == QuestionType.SHORT_ANSWER;
     }
 }

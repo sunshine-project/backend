@@ -1,6 +1,8 @@
 package com.example.sunshineserver.quest.domain;
 
 import com.example.sunshineserver.global.domain.BaseEntity;
+import com.example.sunshineserver.global.exception.QuestionTypeMismatchException;
+import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.user.domain.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,14 +36,27 @@ public class UserQuest extends BaseEntity {
 
     boolean isChecked = false;
 
-    private String photoUrl;
-    private String reflection;
+    private String photoUrl = null;
+    private String shortAnswer = null;
 
     public void complete() {
         if (isCompleted) {
             throw new IllegalStateException("이미 완료된 퀘스트입니다.");
         }
         isCompleted = true;
+        user.completeQuest(questTemplate);
+    }
+
+    public void complete(ShortAnswerQuestCompleteRequest request) {
+        if (isCompleted) {
+            throw new IllegalStateException("이미 완료된 퀘스트입니다.");
+        }
+
+        if (!questTemplate.isShortAnswerQuest()) {
+            throw new QuestionTypeMismatchException();
+        }
+        isCompleted = true;
+        shortAnswer = request.answer();
         user.completeQuest(questTemplate);
     }
 
