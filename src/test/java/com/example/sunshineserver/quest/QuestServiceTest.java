@@ -19,6 +19,7 @@ import com.example.sunshineserver.user.domain.ExperiencePoint;
 import com.example.sunshineserver.user.domain.StatType;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
+import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,32 +55,36 @@ public class QuestServiceTest {
     @Test
     void 퀘스트를_완료하면_유저의_경험치와_스탯이_증가한다() {
         // given
-        Long userId = userService.create(UserSteps.유저_생성_요청());
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
         QuestTemplate questTemplate = 테스트_퀘스트_생성();
 
-        User user = userPort.findById(userId).orElseThrow(RuntimeException::new);
+        User user = userPort.findById(userCreateResponse.userId())
+            .orElseThrow(RuntimeException::new);
         Long userQuestId = userQuestPort.save(UserQuest.of(questTemplate, user));
 
-        QuestCompleteRequest request = new QuestCompleteRequest(userId, userQuestId);
+        QuestCompleteRequest request = new QuestCompleteRequest(userCreateResponse.userId(),
+            userQuestId);
 
         // when
         questService.complete(request);
 
         // then
-        User findUser = userPort.findById(userId).orElseThrow(RuntimeException::new);
+        User findUser = userPort.findById(userCreateResponse.userId()).orElseThrow(RuntimeException::new);
         Assertions.assertThat(findUser.getExperiencePoint().get()).isEqualTo(100);
     }
 
     @Test
     void 이미_완료한_퀘스트는_예외를_발생한다() {
         // given
-        Long userId = userService.create(UserSteps.유저_생성_요청());
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
         QuestTemplate questTemplate = 테스트_퀘스트_생성();
 
-        User user = userPort.findById(userId).orElseThrow(RuntimeException::new);
+        User user = userPort.findById(userCreateResponse.userId())
+            .orElseThrow(RuntimeException::new);
         Long userQuestId = userQuestPort.save(UserQuest.of(questTemplate, user));
 
-        QuestCompleteRequest request = new QuestCompleteRequest(userId, userQuestId);
+        QuestCompleteRequest request = new QuestCompleteRequest(userCreateResponse.userId(),
+            userQuestId);
 
         questService.complete(request);
 
@@ -91,10 +96,11 @@ public class QuestServiceTest {
     @Test
     void 한번도_조회되지_않은_퀘스트를_조회한다() {
         // given
-        Long userId = userService.create(UserSteps.유저_생성_요청());
-        복수의_테스트_퀘스트_생성(userId);
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
+        복수의_테스트_퀘스트_생성(userCreateResponse.userId());
 
-        UncheckedQuestsInquiryRequest request = new UncheckedQuestsInquiryRequest(userId);
+        UncheckedQuestsInquiryRequest request = new UncheckedQuestsInquiryRequest(
+            userCreateResponse.userId());
 
         // when
         List<UserQuest> quests = questService.findUncheckedQuests(request);
@@ -106,15 +112,15 @@ public class QuestServiceTest {
     @Test
     void 조건에_따라_퀘스트들을_조회한다() {
         // given
-        Long userId = userService.create(UserSteps.유저_생성_요청());
-        복수의_테스트_퀘스트_생성(userId);
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
+        복수의_테스트_퀘스트_생성(userCreateResponse.userId());
 
         List<UserQuest> quests = userQuestPort.findAll();
-        QuestCompleteRequest request = new QuestCompleteRequest(userId, quests.get(0).getId());
+        QuestCompleteRequest request = new QuestCompleteRequest(userCreateResponse.userId(), quests.get(0).getId());
         CompletedQuestsInquiryRequest completedQuestsInquiryRequest = new CompletedQuestsInquiryRequest(
-            userId);
+            userCreateResponse.userId());
         UncompletedQuestsInquiryRequest uncompletedQuestsInquiryRequest = new UncompletedQuestsInquiryRequest(
-            userId);
+            userCreateResponse.userId());
         // when
         questService.complete(request);
 
@@ -130,25 +136,26 @@ public class QuestServiceTest {
     @Test
     void 퀘스트_상세_내용을_조회한다() {
         // given
-        Long userId = userService.create(UserSteps.유저_생성_요청());
+        UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
         QuestTemplate questTemplate = 테스트_퀘스트_생성();
 
-        User user = userPort.findById(userId).orElseThrow(RuntimeException::new);
+        User user = userPort.findById(userCreateResponse.userId())
+            .orElseThrow(RuntimeException::new);
         Long userQuestId = userQuestPort.save(UserQuest.of(questTemplate, user));
 
         QuestDetailRequest request = new QuestDetailRequest(userQuestId);
 
         // when
-        QuestDetailResponse response = questService.findQuestDetail(request);
+        QuestDetailResponse questDetailResponse = questService.findQuestDetail(request);
 
         // then
-        Assertions.assertThat(response.title()).isEqualTo("스트레칭");
-        Assertions.assertThat(response.description()).isEqualTo("30초 동안 스트레칭을 실시하세요");
-        Assertions.assertThat(response.experiencePoint().get()).isEqualTo(100);
-        Assertions.assertThat(response.statInfo().getStatType()).isEqualTo(StatType.STR);
-        Assertions.assertThat(response.statInfo().getStatValue()).isEqualTo(1);
-        Assertions.assertThat(response.questionType()).isEqualTo(QuestionType.TIMER);
-        Assertions.assertThat(response.timeLimit()).isEqualTo(15);
+        Assertions.assertThat(questDetailResponse.title()).isEqualTo("스트레칭");
+        Assertions.assertThat(questDetailResponse.description()).isEqualTo("30초 동안 스트레칭을 실시하세요");
+        Assertions.assertThat(questDetailResponse.experiencePoint().get()).isEqualTo(100);
+        Assertions.assertThat(questDetailResponse.statInfo().getStatType()).isEqualTo(StatType.STR);
+        Assertions.assertThat(questDetailResponse.statInfo().getStatValue()).isEqualTo(1);
+        Assertions.assertThat(questDetailResponse.questionType()).isEqualTo(QuestionType.TIMER);
+        Assertions.assertThat(questDetailResponse.timeLimit()).isEqualTo(15);
     }
 
     private QuestTemplate 테스트_퀘스트_생성() {
