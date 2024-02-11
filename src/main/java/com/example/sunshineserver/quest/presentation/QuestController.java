@@ -2,19 +2,24 @@ package com.example.sunshineserver.quest.presentation;
 
 import com.example.sunshineserver.global.domain.RequestURI;
 import com.example.sunshineserver.quest.application.QuestService;
+import com.example.sunshineserver.quest.presentation.dto.PhotoQuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
-import com.example.sunshineserver.quest.presentation.dto.QuestDetailRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
+import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,8 +37,9 @@ public class QuestController {
         @ApiResponse(responseCode = "404", description = "조회에 실패하였습니다."),
     })
 
-    public QuestDetailResponse findQuestDetail(@RequestBody QuestDetailRequest request) {
-        return questService.findQuestDetail(request);
+    public ResponseEntity<QuestDetailResponse> findQuestDetail(
+        @PathVariable Long questId) {
+        return new ResponseEntity<>(questService.findQuestDetail(questId), HttpStatus.OK);
     }
 
     @PostMapping
@@ -42,8 +48,33 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public void completeQuest(@RequestBody QuestCompleteRequest request) {
+    public ResponseEntity<Void> completeQuest(@RequestBody QuestCompleteRequest request) {
         questService.complete(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/short-answer")
+    @Operation(summary = "주관식 퀘스트 완료", description = "주관식 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "실패하였습니다."),
+    })
+    public ResponseEntity<Void> completeShortAnswerQuest(
+        @RequestBody ShortAnswerQuestCompleteRequest request) {
+        questService.completeShortAnswerQuest(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/photo")
+    @Operation(summary = "사진 퀘스트 완료", description = "사진 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "실패하였습니다."),
+    })
+    public ResponseEntity<Void> completePhotoQuest(
+        @RequestPart PhotoQuestCompleteRequest request) {
+        questService.completePhotoQuest(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/uncompleted")
