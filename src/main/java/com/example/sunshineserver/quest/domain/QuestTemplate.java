@@ -59,4 +59,8 @@ public class QuestTemplate {
     public boolean isShortAnswerQuest() {
         return questionType == QuestionType.SHORT_ANSWER;
     }
+
+    public boolean isPhotoQuest() {
+        return questionType == QuestionType.PHOTO;
+    }
 }

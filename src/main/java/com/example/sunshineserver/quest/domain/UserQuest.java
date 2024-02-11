@@ -55,9 +55,22 @@ public class UserQuest extends BaseEntity {
         if (!questTemplate.isShortAnswerQuest()) {
             throw new QuestionTypeMismatchException();
         }
-        isCompleted = true;
-        shortAnswer = request.answer();
-        user.completeQuest(questTemplate);
+        this.isCompleted = true;
+        this.shortAnswer = request.answer();
+        this.user.completeQuest(questTemplate);
+    }
+
+    public void complete(String photoUrl) {
+        if (isCompleted) {
+            throw new IllegalStateException("이미 완료된 퀘스트입니다.");
+        }
+
+        if (!questTemplate.isPhotoQuest()) {
+            throw new QuestionTypeMismatchException();
+        }
+        this.isCompleted = true;
+        this.photoUrl = photoUrl;
+        this.user.completeQuest(questTemplate);
     }
 
     private UserQuest(QuestTemplate questTemplate, User user) {
