@@ -1,6 +1,7 @@
 package com.example.sunshineserver.user.presentation;
 
-import com.example.sunshineserver.global.domain.RequestURI;
+import com.example.sunshineserver.auth.domain.CustomUserDetails;
+import com.example.sunshineserver.global.domain.RequestUri;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.application.UserService;
 import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(RequestURI.USER)
+@RequestMapping(RequestUri.USER)
 @Tag(name = "User", description = "User API")
 public class UserController {
 
@@ -36,13 +38,14 @@ public class UserController {
         return new ResponseEntity<>(userService.create(request), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/home")
     @Operation(summary = "홈 화면 조회", description = "홈 화면을 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다."),
     })
-    public ResponseEntity<UserHomeResponse> home(Long userId) {
-        return new ResponseEntity<>(userService.home(userId), HttpStatus.OK);
+    public ResponseEntity<UserHomeResponse> home(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return new ResponseEntity<>(userService.home(customUserDetails), HttpStatus.OK);
     }
 }
