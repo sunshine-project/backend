@@ -33,9 +33,6 @@ public class UserQuest extends BaseEntity {
     private User user;
 
     boolean isCompleted = false;
-
-    boolean isChecked = false;
-
     private String photoUrl = null;
     private String shortAnswer = null;
 
@@ -82,11 +79,12 @@ public class UserQuest extends BaseEntity {
         return new UserQuest(questTemplate, user);
     }
 
-    public void check() {
-        this.isChecked = true;
+
+    public boolean isUncompleted() {
+        return !isCompleted;
     }
 
-    public boolean isUnchecked() {
-        return !isChecked;
+    public boolean isUserMatched(User currentUser) {
+        return this.user.equals(currentUser);
     }
 }
