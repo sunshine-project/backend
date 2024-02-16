@@ -6,6 +6,7 @@ import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.application.UserService;
 import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
+import com.example.sunshineserver.user.presentation.dto.UserMypageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -47,5 +48,27 @@ public class UserController {
     public ResponseEntity<UserHomeResponse> home(
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return new ResponseEntity<>(userService.home(customUserDetails), HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage/album")
+    @Operation(summary = "마이페이지 조회", description = "마이페이지를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다."),
+    })
+    public ResponseEntity<UserMypageResponse> findAlbum(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return new ResponseEntity<>(userService.findAlbum(customUserDetails), HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage/journal")
+    @Operation(summary = "마이페이지 조회", description = "마이페이지를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다."),
+    })
+    public ResponseEntity<UserMypageResponse> findJournal(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return new ResponseEntity<>(userService.findJournal(customUserDetails), HttpStatus.OK);
     }
 }
