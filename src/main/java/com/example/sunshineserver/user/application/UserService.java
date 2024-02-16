@@ -1,6 +1,7 @@
 package com.example.sunshineserver.user.application;
 
 
+import com.example.sunshineserver.auth.domain.CustomUserDetails;
 import com.example.sunshineserver.global.exception.UserAlreadyExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.user.domain.User;
@@ -32,16 +33,19 @@ public class UserService {
             request.birthDay(),
             request.characterType(),
             request.stat());
-        Long userId = userPort.save(user);
-        return UserCreateResponse.from(userId);
+
+        userPort.save(user);
+
+        return UserCreateResponse.from(request.email());
     }
 
     public List<User> findAllUsers() {
         return userPort.findAll();
     }
 
-    public UserHomeResponse home(Long userId) throws UserNotFoundedException {
-        User user = userPort.findById(userId)
+    public UserHomeResponse home(CustomUserDetails customUserDetails)
+        throws UserNotFoundedException {
+        User user = userPort.findByEmail(customUserDetails.getEmail())
             .orElseThrow(() -> new UserNotFoundedException());
 
         return UserHomeResponse.from(user);

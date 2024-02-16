@@ -1,23 +1,19 @@
 package com.example.sunshineserver.quest.application;
 
+import com.example.sunshineserver.auth.domain.CustomUserDetails;
 import com.example.sunshineserver.global.exception.QuestNotExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.infrastructure.PixelConverter;
-import com.example.sunshineserver.quest.presentation.dto.CompletedQuestsInquiryRequest;
 import com.example.sunshineserver.quest.presentation.dto.PhotoQuestCompleteRequest;
-import com.example.sunshineserver.quest.presentation.dto.QuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
-import com.example.sunshineserver.quest.presentation.dto.UncheckedQuestsInquiryRequest;
-import com.example.sunshineserver.quest.presentation.dto.UncompletedQuestsInquiryRequest;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import jakarta.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,10 +24,11 @@ import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class QuestService {
 
@@ -43,29 +40,44 @@ public class QuestService {
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
 
-    public void complete(QuestCompleteRequest request) {
-        UserQuest userQuest = userQuestPort.findById(request.questId())
+    public void complete(Long questId, CustomUserDetails userDetails) {
+        User currentUser = userPort.findById(userDetails.getId())
+            .orElseThrow(() -> new UserNotFoundedException());
+
+        UserQuest userQuest = userQuestPort.findById(questId)
             .orElseThrow(() -> new QuestNotExistedException());
 
+        if (!userQuest.isUserMatched(currentUser)) {
+            throw new UserNotFoundedException();
+        }
         userQuest.complete();
     }
 
-    public void completeShortAnswerQuest(ShortAnswerQuestCompleteRequest request) {
-        userPort.findById(request.userId())
+    public void completeShortAnswerQuest(ShortAnswerQuestCompleteRequest request,
+        CustomUserDetails userDetails) {
+        User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
 
         UserQuest userQuest = userQuestPort.findById(request.questId())
             .orElseThrow(() -> new QuestNotExistedException());
 
+        if (!userQuest.isUserMatched(currentUser)) {
+            throw new UserNotFoundedException();
+        }
         userQuest.complete(request);
     }
 
-    public void completePhotoQuest(PhotoQuestCompleteRequest request) {
-        userPort.findById(request.userId())
+    public void completePhotoQuest(PhotoQuestCompleteRequest request,
+        CustomUserDetails userDetails) {
+        User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
 
         UserQuest userQuest = userQuestPort.findById(request.questId())
             .orElseThrow(() -> new QuestNotExistedException());
+
+        if (!userQuest.isUserMatched(currentUser)) {
+            throw new UserNotFoundedException();
+        }
 
         String uuid = UUID.randomUUID().toString();
         String type = request.photo().getContentType();
@@ -95,25 +107,17 @@ public class QuestService {
 	bais // 이미지 데이터
             );
         } catch (IOException error) {
-            throw new IllegalArgumentException("Failed to upload pixelated image to GCP Cloud Storage");
+            throw new IllegalArgumentException(
+	"Failed to upload pixelated image to GCP Cloud Storage");
         }
     }
 
-    public List<UserQuest> findUncheckedQuests(UncheckedQuestsInquiryRequest request) {
-        List<UserQuest> userQuests = userQuestPort.findUncheckedQuests(request.userId());
-
-        userQuests.stream()
-            .forEach(userQuest -> userQuest.check());
-
-        return userQuests;
+    public List<UserQuest> findCompletedQuests(CustomUserDetails userDetails) {
+        return userQuestPort.findCompletedQuests(userDetails.getId());
     }
 
-    public List<UserQuest> findCompletedQuests(CompletedQuestsInquiryRequest request) {
-        return userQuestPort.findCompletedQuests(request.userId());
-    }
-
-    public List<UserQuest> findUncompletedQuests(UncompletedQuestsInquiryRequest request) {
-        return userQuestPort.findUncompletedQuests(request.userId());
+    public List<UserQuest> findUncompletedQuests(CustomUserDetails userDetails) {
+        return userQuestPort.findUncompletedQuests(userDetails.getId());
     }
 
     public QuestDetailResponse findQuestDetail(Long questId) {
