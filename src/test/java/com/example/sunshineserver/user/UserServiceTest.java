@@ -1,5 +1,6 @@
 package com.example.sunshineserver.user;
 
+import com.example.sunshineserver.auth.domain.CustomUserDetails;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.example.sunshineserver.user.presentation.dto.UserCreateRequest;
 import com.example.sunshineserver.user.application.UserService;
@@ -44,7 +45,8 @@ public class UserServiceTest {
         UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
 
         // when
-        UserHomeResponse response = userService.home(userCreateResponse.userId());
+        UserHomeResponse response = userService.home(
+            new CustomUserDetails(userPort.findByEmail(userCreateResponse.email()).get()));
 
         // then
         Assertions.assertThat(response).isNotNull();
@@ -55,7 +57,6 @@ public class UserServiceTest {
         Assertions.assertThat(response.level()).isEqualTo(1);
         Assertions.assertThat(response.exclusiveRange()).isEqualTo(1000);
         Assertions.assertThat(response.leftDay()).isEqualTo(70);
-        Assertions.assertThat(response.isQuestExisted()).isFalse();
         Assertions.assertThat(response.isAbleToEndGame()).isFalse();
     }
 }

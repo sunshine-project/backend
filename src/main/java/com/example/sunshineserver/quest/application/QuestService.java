@@ -40,6 +40,7 @@ public class QuestService {
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
 
+    @Transactional
     public void complete(Long questId, CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
@@ -53,6 +54,7 @@ public class QuestService {
         userQuest.complete();
     }
 
+    @Transactional
     public void completeShortAnswerQuest(ShortAnswerQuestCompleteRequest request,
         CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
@@ -67,6 +69,7 @@ public class QuestService {
         userQuest.complete(request);
     }
 
+    @Transactional
     public void completePhotoQuest(PhotoQuestCompleteRequest request,
         CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
@@ -127,6 +130,7 @@ public class QuestService {
         return QuestDetailResponse.of(userQuest);
     }
 
+    @Transactional
     public void assignQuest(User user, QuestTemplate questTemplate) {
         userQuestPort.save(UserQuest.of(questTemplate, user));
     }
