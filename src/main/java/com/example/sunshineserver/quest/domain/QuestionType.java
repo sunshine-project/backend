@@ -4,5 +4,6 @@ public enum QuestionType {
     SHORT_ANSWER,
     PHOTO,
     ROUTINE,
-    TIMER
+    TIMER,
+    DAILY
 }
