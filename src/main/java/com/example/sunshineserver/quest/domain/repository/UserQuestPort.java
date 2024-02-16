@@ -9,11 +9,10 @@ import org.springframework.stereotype.Component;
 public interface UserQuestPort {
 
     Optional<UserQuest> findById(Long id);
+
     Long save(UserQuest userQuest);
 
     List<UserQuest> findAll();
-
-    List<UserQuest> findUncheckedQuests(long userId);
 
     void deleteAll();
 

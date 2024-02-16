@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserQuestRepository extends JpaRepository<UserQuest, Long> {
 
-    List<UserQuest> findByIsCheckedFalseAndUserId(Long userId);
-
     List<UserQuest> findByIsCompletedTrueAndUserId(Long userId);
 
     List<UserQuest> findByIsCompletedFalseAndUserId(Long userId);

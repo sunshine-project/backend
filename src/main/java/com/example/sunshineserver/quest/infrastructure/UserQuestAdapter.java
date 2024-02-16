@@ -30,11 +30,6 @@ public class UserQuestAdapter implements UserQuestPort {
     }
 
     @Override
-    public List<UserQuest> findUncheckedQuests(long userId) {
-        return userQuestRepository.findByIsCheckedFalseAndUserId(userId);
-    }
-
-    @Override
     public void deleteAll() {
         userQuestRepository.deleteAll();
     }
