@@ -18,8 +18,8 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -48,6 +48,8 @@ public class User extends BaseEntity {
     private Gender gender;
 
     private LocalDate birthDay;
+
+    private String refreshToken;
 
     @Enumerated(value = EnumType.STRING)
     private CharacterType characterType;
@@ -99,12 +101,36 @@ public class User extends BaseEntity {
         this.level = Level.from(experiencePoint.get());
     }
 
-    public boolean isQuestExisted() {
+    public long uncompletedQuestSize() {
         return userQuests.stream()
-            .anyMatch(UserQuest::isUnchecked);
+            .filter(UserQuest::isUncompleted)
+            .count();
     }
 
     public boolean isAbleToEndGame() {
         return stat.isAbleToEndGame();
+    }
+
+    public boolean isRefreshTokenValid(String refreshToken) {
+        return this.refreshToken.equals(refreshToken);
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
