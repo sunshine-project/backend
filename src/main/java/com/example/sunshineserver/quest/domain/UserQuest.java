@@ -4,7 +4,6 @@ import com.example.sunshineserver.global.domain.BaseEntity;
 import com.example.sunshineserver.global.exception.QuestionTypeMismatchException;
 import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.user.domain.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,7 +35,7 @@ public class UserQuest extends BaseEntity {
     private String photoUrl = null;
     private String shortAnswer = null;
 
-    public void complete() {
+    public void completeShortAnswer() {
         if (isCompleted) {
             throw new IllegalStateException("이미 완료된 퀘스트입니다.");
         }
@@ -44,7 +43,7 @@ public class UserQuest extends BaseEntity {
         user.completeQuest(questTemplate);
     }
 
-    public void complete(ShortAnswerQuestCompleteRequest request) {
+    public void completeShortAnswer(String shortAnswer) {
         if (isCompleted) {
             throw new IllegalStateException("이미 완료된 퀘스트입니다.");
         }
@@ -53,11 +52,11 @@ public class UserQuest extends BaseEntity {
             throw new QuestionTypeMismatchException();
         }
         this.isCompleted = true;
-        this.shortAnswer = request.answer();
+        this.shortAnswer = shortAnswer;
         this.user.completeQuest(questTemplate);
     }
 
-    public void complete(String photoUrl) {
+    public void completePhoto(String photoUrl) {
         if (isCompleted) {
             throw new IllegalStateException("이미 완료된 퀘스트입니다.");
         }

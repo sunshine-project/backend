@@ -59,4 +59,13 @@ public class UserServiceTest {
         Assertions.assertThat(response.leftDay()).isEqualTo(70);
         Assertions.assertThat(response.isAbleToEndGame()).isFalse();
     }
+
+    @Test
+    void 마이페이지_Album을_조회한다() {
+
+    }
+
+    @Test
+    void 마이페이지_Journal을_조회한다() {
+    }
 }

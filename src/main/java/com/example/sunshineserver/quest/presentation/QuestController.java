@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,30 +58,31 @@ public class QuestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/short-answer")
+    @PostMapping("/short-answer/{questId}")
     @Operation(summary = "주관식 퀘스트 완료", description = "주관식 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completeShortAnswerQuest(
-        @RequestBody ShortAnswerQuestCompleteRequest request,
+        @PathVariable Long questId, @RequestBody ShortAnswerQuestCompleteRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        questService.completeShortAnswerQuest(request, userDetails);
+        questService.completeShortAnswerQuest(questId, request, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/photo")
-    @Operation(summary = "사진 퀘스트 완료", description = "사진 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다. 이 때, 사진은 multipart/form으로 전송해야 합니다. 전송 후 반환되는 uuid 값을 통해 사진에 접근 가능합니다."
-        + "https://storage.googleapis.com/sunshine-bucket/UUID값")
+    @PostMapping("/photo/{questId}")
+    @Operation(summary = "사진 퀘스트 완료", description =
+        "사진 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다. 이 때, 사진은 multipart/form으로 전송해야 합니다. 전송 후 반환되는 uuid 값을 통해 사진에 접근 가능합니다."
+            + "https://storage.googleapis.com/sunshine-bucket/UUID값")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completePhotoQuest(
-        @RequestPart PhotoQuestCompleteRequest request,
+        @PathVariable Long questId, @RequestPart(name = "photo") MultipartFile photo,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        questService.completePhotoQuest(request, userDetails);
+        questService.completePhotoQuest(questId, photo, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
