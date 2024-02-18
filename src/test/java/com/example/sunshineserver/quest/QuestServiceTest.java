@@ -134,11 +134,9 @@ public class QuestServiceTest {
     }
 
     private QuestTemplate 테스트_퀘스트_생성() {
-        QuestTemplate questTemplate = new QuestTemplate(1, "스트레칭", "30초 동안 스트레칭을 실시하세요",
+        return questTemplateRepository.save(new QuestTemplate(1, "스트레칭", "30초 동안 스트레칭을 실시하세요",
             ExperiencePoint.from(100), QuestionType.TIMER,
-            StatInfo.of(StatType.STR, 1), 15);
-
-        return questTemplate;
+            StatInfo.of(StatType.STR, 1), 15));
     }
 
     private void 복수의_테스트_퀘스트_생성(String email) {
@@ -153,6 +151,10 @@ public class QuestServiceTest {
         QuestTemplate quest3 = new QuestTemplate(3, "책 읽기", "책을 30분 동안 읽고 인증하세요",
             ExperiencePoint.from(300), QuestionType.TIMER,
             StatInfo.of(StatType.SPI, 1), 30);
+
+        questTemplateRepository.save(quest1);
+        questTemplateRepository.save(quest2);
+        questTemplateRepository.save(quest3);
 
         userPort.findByEmail(email).ifPresent(user -> {
             userQuestPort.save(UserQuest.of(quest1, user));
@@ -194,9 +196,9 @@ public class QuestServiceTest {
     }
 
     private QuestTemplate SHORT_ANSWER_테스트_퀘스트_생성() {
-        return new QuestTemplate(1, "당신의 꿈은?", "당신의 꿈을 구체적으로 설명해주세요.",
+        return questTemplateRepository.save(new QuestTemplate(1, "당신의 꿈은?", "당신의 꿈을 구체적으로 설명해주세요.",
             ExperiencePoint.from(300), QuestionType.SHORT_ANSWER,
-            StatInfo.of(StatType.SPI, 1), null);
+            StatInfo.of(StatType.SPI, 1), null));
     }
 
     @Test
@@ -236,5 +238,4 @@ public class QuestServiceTest {
             ExperiencePoint.from(300), QuestionType.SHORT_ANSWER,
             StatInfo.of(StatType.SPI, 1), null);
     }
-
 }
