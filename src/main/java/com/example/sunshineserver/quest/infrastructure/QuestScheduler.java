@@ -22,7 +22,7 @@ public class QuestScheduler {
     private final QuestTimer questTimer;
 
     // 매일 자정에 실행됩니다.
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "${schedules.cron.reward.publish}")
     public void assignQuestDaily() {
         LocalDate currentDate = questTimer.now();
 
@@ -36,8 +36,9 @@ public class QuestScheduler {
 
     private QuestTemplate determineQuestTemplate(LocalDate userCreationDate,
         LocalDate currentDate) {
-        Period period = Period.between(userCreationDate, currentDate);
+        Period period = Period.between(userCreationDate.minusDays(1), currentDate);
         int questionDay = period.getDays();
+        System.out.println("questionDay: " + questionDay);
 
         return questTemplateRepository.findByQuestionDay(questionDay)
             .orElseThrow(() -> new IllegalArgumentException("퀘스트 템플릿이 존재하지 않습니다."));

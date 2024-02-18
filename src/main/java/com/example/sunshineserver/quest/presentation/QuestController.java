@@ -70,7 +70,8 @@ public class QuestController {
     }
 
     @PostMapping("/photo")
-    @Operation(summary = "사진 퀘스트 완료", description = "사진 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다.")
+    @Operation(summary = "사진 퀘스트 완료", description = "사진 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다. 이 때, 사진은 multipart/form으로 전송해야 합니다. 전송 후 반환되는 uuid 값을 통해 사진에 접근 가능합니다."
+        + "https://storage.googleapis.com/sunshine-bucket/UUID값")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
