@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,11 +116,25 @@ public class QuestService {
     }
 
     public List<UserQuest> findCompletedQuests(CustomUserDetails userDetails) {
-        return userQuestPort.findCompletedQuests(userDetails.getId());
+        User user = userPort.findByEmail(userDetails.getEmail())
+            .orElseThrow(() -> new UserNotFoundedException());
+
+        return userQuestPort.findAllByUser(user).stream()
+            .filter(UserQuest::isCompleted)
+            .collect(Collectors.toList());
     }
 
     public List<UserQuest> findUncompletedQuests(CustomUserDetails userDetails) {
-        return userQuestPort.findUncompletedQuests(userDetails.getId());
+        User user = userPort.findByEmail(userDetails.getEmail())
+            .orElseThrow(() -> new UserNotFoundedException());
+
+        List<UserQuest> userQuests = userQuestPort.findAllByUser(user).stream()
+            .filter(UserQuest::isUncompleted)
+            .collect(Collectors.toList());
+
+        System.out.println(userQuests.size());
+
+        return userQuests;
     }
 
     public QuestDetailResponse findQuestDetail(Long questId) {

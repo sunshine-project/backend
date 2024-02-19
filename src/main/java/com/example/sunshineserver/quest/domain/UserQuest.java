@@ -2,7 +2,6 @@ package com.example.sunshineserver.quest.domain;
 
 import com.example.sunshineserver.global.domain.BaseEntity;
 import com.example.sunshineserver.global.exception.QuestionTypeMismatchException;
-import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,9 +22,9 @@ public class UserQuest extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_quest_id")
-    private Long id;
+    private Long userQuestId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private QuestTemplate questTemplate;
 
     @ManyToOne(fetch = FetchType.LAZY)

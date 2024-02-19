@@ -1,6 +1,7 @@
 package com.example.sunshineserver.quest.domain.repository;
 
 import com.example.sunshineserver.quest.domain.UserQuest;
+import com.example.sunshineserver.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,5 @@ public interface UserQuestPort {
 
     void deleteAll();
 
-    List<UserQuest> findCompletedQuests(Long userId);
-
-    List<UserQuest> findUncompletedQuests(Long aLong);
+    List<UserQuest> findAllByUser(User user);
 }

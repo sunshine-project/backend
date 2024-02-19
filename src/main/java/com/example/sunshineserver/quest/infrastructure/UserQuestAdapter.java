@@ -3,6 +3,7 @@ package com.example.sunshineserver.quest.infrastructure;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.domain.repository.UserQuestRepository;
+import com.example.sunshineserver.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserQuestAdapter implements UserQuestPort {
 
     @Override
     public Long save(UserQuest userQuest) {
-        return userQuestRepository.save(userQuest).getId();
+        return userQuestRepository.save(userQuest).getUserQuestId();
     }
 
     @Override
@@ -35,12 +36,7 @@ public class UserQuestAdapter implements UserQuestPort {
     }
 
     @Override
-    public List<UserQuest> findCompletedQuests(Long userId) {
-        return userQuestRepository.findByIsCompletedTrueAndUserId(userId);
-    }
-
-    @Override
-    public List<UserQuest> findUncompletedQuests(Long userId) {
-        return userQuestRepository.findByIsCompletedFalseAndUserId(userId);
+    public List<UserQuest> findAllByUser(User user) {
+        return userQuestRepository.findAllByUser(user);
     }
 }

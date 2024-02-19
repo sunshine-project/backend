@@ -99,7 +99,7 @@ public class QuestServiceTest {
         CustomUserDetails userDetails = new CustomUserDetails(
             userPort.findByEmail(userCreateResponse.email()).orElseThrow(RuntimeException::new));
         // when
-        questService.complete(quests.get(0).getId(), userDetails);
+        questService.complete(quests.get(0).getUserQuestId(), userDetails);
 
         // then
         // 완료한 퀘스트 1개, 미완료한 퀘스트 2개

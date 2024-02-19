@@ -4,6 +4,7 @@ import com.example.sunshineserver.global.domain.BaseEntity;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.StatInfo;
 import com.example.sunshineserver.quest.domain.UserQuest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -64,6 +65,7 @@ public class User extends BaseEntity {
     private Level level = Level.LV1;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<UserQuest> userQuests = new ArrayList<>();
 
     public User(String email, String name, Gender gender, LocalDate birthDay,

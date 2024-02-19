@@ -42,7 +42,7 @@ public class QuestController {
     })
 
     public ResponseEntity<QuestDetailResponse> findQuestDetail(
-        @PathVariable Long questId) {
+        @RequestParam (name = "questId") Long questId) {
         return new ResponseEntity<>(questService.findQuestDetail(questId), HttpStatus.OK);
     }
 
@@ -52,7 +52,7 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<Void> completeQuest(@PathVariable Long questId, @AuthenticationPrincipal
+    public ResponseEntity<Void> completeQuest(@RequestParam (name = "questId") Long questId, @AuthenticationPrincipal
     CustomUserDetails userDetails) {
         questService.complete(questId, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -65,7 +65,7 @@ public class QuestController {
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completeShortAnswerQuest(
-        @PathVariable Long questId, @RequestBody ShortAnswerQuestCompleteRequest request,
+        @RequestParam (name = "questId") Long questId, @RequestBody ShortAnswerQuestCompleteRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         questService.completeShortAnswerQuest(questId, request, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -80,7 +80,7 @@ public class QuestController {
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completePhotoQuest(
-        @PathVariable Long questId, @RequestPart(name = "photo") MultipartFile photo,
+        @RequestParam (name = "questId") Long questId, @RequestPart(name = "photo") MultipartFile photo,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         questService.completePhotoQuest(questId, photo, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);

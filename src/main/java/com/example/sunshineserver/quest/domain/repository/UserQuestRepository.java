@@ -1,6 +1,8 @@
 package com.example.sunshineserver.quest.domain.repository;
 
+import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
+import com.example.sunshineserver.user.domain.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface UserQuestRepository extends JpaRepository<UserQuest, Long> {
 
     List<UserQuest> findByUser_Id(Long userId);
-    List<UserQuest> findByIsCompletedTrueAndUserId(Long userId);
+    boolean existsByQuestTemplateAndUser(QuestTemplate questTemplate, User user);
 
-    List<UserQuest> findByIsCompletedFalseAndUserId(Long userId);
+    List<UserQuest> findAllByUser(User user);
 }
