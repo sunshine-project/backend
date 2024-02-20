@@ -38,7 +38,6 @@ public class QuestScheduler {
         LocalDate currentDate) {
         Period period = Period.between(userCreationDate.minusDays(1), currentDate);
         int questionDay = period.getDays();
-        System.out.println("questionDay: " + questionDay);
 
         return questTemplateRepository.findByQuestionDay(questionDay)
             .orElseThrow(() -> new IllegalArgumentException("퀘스트 템플릿이 존재하지 않습니다."));

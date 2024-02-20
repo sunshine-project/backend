@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다."),
     })
-    public ResponseEntity<UserMypageResponse> findAlbum(
+    public ResponseEntity<List<UserMypageResponse>> findAlbum(
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return new ResponseEntity<>(userService.findAlbum(customUserDetails), HttpStatus.OK);
     }
@@ -67,7 +68,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다."),
     })
-    public ResponseEntity<UserMypageResponse> findJournal(
+    public ResponseEntity<List<UserMypageResponse>> findJournal(
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return new ResponseEntity<>(userService.findJournal(customUserDetails), HttpStatus.OK);
     }

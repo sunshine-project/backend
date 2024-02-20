@@ -2,10 +2,8 @@ package com.example.sunshineserver.saramin.presentation.dto;
 
 import lombok.Getter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.ToString;
 
 @Getter
-@ToString
 public class Job {
 
     private Company company;

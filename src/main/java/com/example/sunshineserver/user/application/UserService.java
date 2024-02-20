@@ -13,6 +13,7 @@ import com.example.sunshineserver.user.presentation.dto.UserCreateResponse;
 import com.example.sunshineserver.user.presentation.dto.UserHomeResponse;
 import com.example.sunshineserver.user.presentation.dto.UserMypageResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,23 +56,19 @@ public class UserService {
         return UserHomeResponse.from(user);
     }
 
-    public UserMypageResponse findAlbum(CustomUserDetails customUserDetails) {
-        List<String> userQuests = userQuestRepository.findByUser_Id(customUserDetails.getId())
+    public List<UserMypageResponse> findAlbum(CustomUserDetails customUserDetails) {
+        return userQuestRepository.findByUser_Id(customUserDetails.getId())
             .stream()
             .filter(u -> u.getQuestTemplate().isPhotoQuest())
-            .map(UserQuest::getPhotoUrl)
-            .toList();
-
-        return new UserMypageResponse(userQuests);
+            .map(m -> new UserMypageResponse(m.getQuestTemplate().getTitle(), m.getPhotoUrl()))
+            .collect(Collectors.toList());
     }
 
-    public UserMypageResponse findJournal(CustomUserDetails customUserDetails) {
-        List<String> userQuests = userQuestRepository.findByUser_Id(customUserDetails.getId())
+    public List<UserMypageResponse> findJournal(CustomUserDetails customUserDetails) {
+        return userQuestRepository.findByUser_Id(customUserDetails.getId())
             .stream()
             .filter(u -> u.getQuestTemplate().isShortAnswerQuest())
-            .map(UserQuest::getShortAnswer)
-            .toList();
-
-        return new UserMypageResponse(userQuests);
+            .map(m -> new UserMypageResponse(m.getQuestTemplate().getTitle(), m.getShortAnswer()))
+            .collect(Collectors.toList());
     }
 }
