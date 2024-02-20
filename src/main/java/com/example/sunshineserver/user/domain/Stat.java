@@ -41,7 +41,7 @@ public class Stat {
 	return new Stat(this.str, this.spi + statInfo.getStatValue(), this.pea, this.skl);
             case PEA:
 	return new Stat(this.str, this.spi, this.pea + statInfo.getStatValue(), this.skl);
-            case SKL:
+            case KNO:
 	return new Stat(this.str, this.spi, this.pea, this.skl + statInfo.getStatValue());
             default:
 	throw new IllegalArgumentException("잘못된 스탯 타입입니다.");
