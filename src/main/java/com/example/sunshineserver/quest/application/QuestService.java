@@ -1,6 +1,7 @@
 package com.example.sunshineserver.quest.application;
 
 import com.example.sunshineserver.auth.domain.CustomUserDetails;
+import com.example.sunshineserver.chat.application.ChatService;
 import com.example.sunshineserver.global.exception.QuestNotExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
@@ -9,6 +10,9 @@ import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.infrastructure.PixelConverter;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
+import com.example.sunshineserver.saramin.application.SaraminService;
+import com.example.sunshineserver.saramin.presentation.dto.SaraminJobRequest;
+import com.example.sunshineserver.saramin.presentation.dto.SaraminJobResponse;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import com.google.cloud.storage.BlobInfo;
@@ -36,6 +40,8 @@ public class QuestService {
     private final UserPort userPort;
     private final PixelConverter pixelConverter;
     private final Storage storage;
+    private final ChatService chatService;
+    private final SaraminService saraminService;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
@@ -147,5 +153,19 @@ public class QuestService {
     @Transactional
     public void assignQuest(User user, QuestTemplate questTemplate) {
         userQuestPort.save(UserQuest.of(questTemplate, user));
+    }
+
+    public List<SaraminJobResponse> findFinalQuest(CustomUserDetails userDetails) {
+        User user = userPort.findByEmail(userDetails.getEmail())
+            .orElseThrow(() -> new UserNotFoundedException());
+
+        String text = userQuestPort.findAllByUser(user)
+            .stream()
+            .filter(u -> u.getQuestTemplate().isShortAnswerQuest())
+            .map(u -> u.getShortAnswer())
+            .collect(Collectors.joining());
+
+        SaraminJobRequest request = chatService.generateSaraminRequest(text);
+        return saraminService.inquire(request);
     }
 }
