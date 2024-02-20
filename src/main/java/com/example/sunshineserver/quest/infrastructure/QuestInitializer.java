@@ -8,8 +8,6 @@ import com.example.sunshineserver.user.domain.ExperiencePoint;
 import com.example.sunshineserver.user.domain.StatType;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

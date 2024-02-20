@@ -4,9 +4,9 @@ import com.example.sunshineserver.auth.domain.CustomUserDetails;
 import com.example.sunshineserver.global.domain.RequestUri;
 import com.example.sunshineserver.quest.application.QuestService;
 import com.example.sunshineserver.quest.domain.UserQuest;
-import com.example.sunshineserver.quest.presentation.dto.PhotoQuestCompleteRequest;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
+import com.example.sunshineserver.saramin.presentation.dto.SaraminJobResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +41,7 @@ public class QuestController {
     })
 
     public ResponseEntity<QuestDetailResponse> findQuestDetail(
-        @RequestParam (name = "questId") Long questId) {
+        @RequestParam(name = "questId") Long questId) {
         return new ResponseEntity<>(questService.findQuestDetail(questId), HttpStatus.OK);
     }
 
@@ -52,8 +51,9 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<Void> completeQuest(@RequestParam (name = "questId") Long questId, @AuthenticationPrincipal
-    CustomUserDetails userDetails) {
+    public ResponseEntity<Void> completeQuest(@RequestParam(name = "questId") Long questId,
+        @AuthenticationPrincipal
+        CustomUserDetails userDetails) {
         questService.complete(questId, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -65,7 +65,8 @@ public class QuestController {
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completeShortAnswerQuest(
-        @RequestParam (name = "questId") Long questId, @RequestBody ShortAnswerQuestCompleteRequest request,
+        @RequestParam(name = "questId") Long questId,
+        @RequestBody ShortAnswerQuestCompleteRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         questService.completeShortAnswerQuest(questId, request, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -80,7 +81,8 @@ public class QuestController {
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completePhotoQuest(
-        @RequestParam (name = "questId") Long questId, @RequestPart(name = "photo") MultipartFile photo,
+        @RequestParam(name = "questId") Long questId,
+        @RequestPart(name = "photo") MultipartFile photo,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         questService.completePhotoQuest(questId, photo, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -106,5 +108,16 @@ public class QuestController {
     public ResponseEntity<List<UserQuest>> findCompletedQuests(
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<>(questService.findCompletedQuests(userDetails), HttpStatus.OK);
+    }
+
+    @GetMapping("/final")
+    @Operation(summary = "마지막 미션을 조회", description = "마지막 미션인 직업 추천을 진행합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "조회에 실패하였습니다."),
+    })
+    public ResponseEntity<List<SaraminJobResponse>> findFinalQuest(
+        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return new ResponseEntity<>(questService.findFinalQuest(userDetails), HttpStatus.OK);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sunshineserver.filter;
+package com.example.sunshineserver.auth.filter;
 
 import com.example.sunshineserver.auth.domain.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;

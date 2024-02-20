@@ -1,7 +1,7 @@
 package com.example.sunshineserver.global.config;
 
 import com.example.sunshineserver.auth.domain.jwt.JwtTokenProvider;
-import com.example.sunshineserver.filter.JwtAuthenticationFilter;
+import com.example.sunshineserver.auth.filter.JwtAuthenticationFilter;
 import com.example.sunshineserver.global.domain.RequestUri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
