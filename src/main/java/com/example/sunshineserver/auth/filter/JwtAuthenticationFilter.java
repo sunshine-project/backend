@@ -1,6 +1,7 @@
 package com.example.sunshineserver.auth.filter;
 
 import com.example.sunshineserver.auth.domain.jwt.JwtTokenProvider;
+import com.example.sunshineserver.global.exception.TokenExpiredException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,14 +25,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain)
         throws ServletException, IOException {
-        String token = resolveToken(request);
+        try {
+            String token = resolveToken(request);
 
-        if (token != null && !jwtTokenProvider.isTokenExpired(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (token != null) {
+	if (jwtTokenProvider.isTokenExpired(token)) {
+	    throw new TokenExpiredException("Token expired");
+	} else {
+	    Authentication authentication = jwtTokenProvider.getAuthentication(token);
+	    SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
+            }
+            filterChain.doFilter(request, response);
+        } catch (TokenExpiredException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token expired");
+            return;
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {
