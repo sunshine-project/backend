@@ -30,7 +30,7 @@ public class AuthController {
     @Operation(summary = "Authorization Code 경로", description = "Authorization Code를 받을 수 있는 경로입니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "회원 가입에 실패하였습니다."),
+        @ApiResponse(responseCode = "400", description = "회원 가입에 실패하였습니다."),
     })
     public ResponseEntity<AccessTokenResponse> code(@RequestParam("code") String authCode) {
         return new ResponseEntity<>(authService.code(authCode), HttpStatus.OK);
@@ -40,7 +40,7 @@ public class AuthController {
     @Operation(summary = "구글 로그인", description = "구글 id_token을 통해 로그인을 진행합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "회원 가입에 실패하였습니다."),
+        @ApiResponse(responseCode = "400", description = "회원 가입에 실패하였습니다."),
     })
     public ResponseEntity<GoogleLoginResponse> loginGoogle(
         @RequestParam("id_token") String idToken) {
@@ -51,7 +51,7 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "RefreshToken을 통해 AccessToken을 재발급합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "회원 가입에 실패하였습니다."),
+        @ApiResponse(responseCode = "400", description = "회원 가입에 실패하였습니다."),
     })
     public ResponseEntity<TokenInfo> refreshToken(
         @RequestParam("refresh_token") String refreshToken) {

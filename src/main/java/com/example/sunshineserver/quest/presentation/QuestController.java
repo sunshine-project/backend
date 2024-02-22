@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,7 @@ public class QuestController {
 
     private final QuestService questService;
 
-    @GetMapping("/{questId}")
+    @GetMapping("/{user_quest_id}")
     @Operation(summary = "퀘스트 상세 조회", description = "퀘스트의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
@@ -41,38 +42,38 @@ public class QuestController {
     })
 
     public ResponseEntity<QuestDetailResponse> findQuestDetail(
-        @RequestParam(name = "questId") Long questId) {
+        @PathVariable(name = "user_quest_id") Long questId) {
         return new ResponseEntity<>(questService.findQuestDetail(questId), HttpStatus.OK);
     }
 
-    @PostMapping("/{questId}")
+    @PostMapping("/{user_quest_id}")
     @Operation(summary = "퀘스트 완료", description = "퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<Void> completeQuest(@RequestParam(name = "questId") Long questId,
+    public ResponseEntity<Void> completeQuest(@PathVariable(name = "user_quest_id") Long questId,
         @AuthenticationPrincipal
         CustomUserDetails userDetails) {
         questService.complete(questId, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/short-answer/{questId}")
+    @PostMapping("/short-answer/{user_quest_id}")
     @Operation(summary = "주관식 퀘스트 완료", description = "주관식 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completeShortAnswerQuest(
-        @RequestParam(name = "questId") Long questId,
+        @PathVariable(name = "user_quest_id") Long questId,
         @RequestBody ShortAnswerQuestCompleteRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         questService.completeShortAnswerQuest(questId, request, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/photo/{questId}")
+    @PostMapping("/photo/{user_quest_id}")
     @Operation(summary = "사진 퀘스트 완료", description =
         "사진 퀘스트를 완료합니다. 유저의 경험치와 스탯이 증가합니다. 이 때, 사진은 multipart/form으로 전송해야 합니다. 전송 후 반환되는 uuid 값을 통해 사진에 접근 가능합니다."
             + "https://storage.googleapis.com/sunshine-bucket/UUID값")
@@ -81,7 +82,7 @@ public class QuestController {
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
     public ResponseEntity<Void> completePhotoQuest(
-        @RequestParam(name = "questId") Long questId,
+        @PathVariable(name = "user_quest_id") Long questId,
         @RequestPart(name = "photo") MultipartFile photo,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         questService.completePhotoQuest(questId, photo, userDetails);

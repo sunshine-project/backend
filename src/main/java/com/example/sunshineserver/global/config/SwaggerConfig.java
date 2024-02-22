@@ -33,7 +33,7 @@ public class SwaggerConfig {
 	    .scheme("Bearer")
 	    .bearerFormat("JWT")))
             .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
-//
+
 //            .servers(List.of(
 //	new Server().url("http://localhost:8080/").description("Sunshine API Server")));
 
