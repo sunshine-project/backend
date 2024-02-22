@@ -17,8 +17,8 @@ public class QuestInitializer {
 
     private final QuestTemplateRepository questTemplateRepository;
 
-    @PostConstruct
-    @Transactional
+//    @PostConstruct
+//    @Transactional
     public void initialize() {
         questTemplateRepository.save(new QuestTemplate(1, "Meditate for 5 Minutes",
             "Spend 5 minutes in meditation to calm your mind.",

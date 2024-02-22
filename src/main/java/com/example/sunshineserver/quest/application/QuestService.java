@@ -138,8 +138,6 @@ public class QuestService {
             .filter(UserQuest::isUncompleted)
             .collect(Collectors.toList());
 
-        System.out.println(userQuests.size());
-
         return userQuests;
     }
 

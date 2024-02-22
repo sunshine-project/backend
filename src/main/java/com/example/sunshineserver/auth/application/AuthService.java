@@ -32,12 +32,12 @@ public class AuthService {
 
         Optional<User> user = userPort.findByEmail(email);
 
-        if (!user.isPresent()) {
-            return new GoogleLoginResponse(null,
-	null, email, false);
-        }
-
         TokenInfo tokenInfo = jwtTokenProvider.createTokenInfo(email);
+
+        if (!user.isPresent()) {
+            return new GoogleLoginResponse(tokenInfo.getAccessToken(),
+	tokenInfo.getRefreshToken(), email, false);
+        }
 
         return new GoogleLoginResponse(tokenInfo.getAccessToken(),
             tokenInfo.getRefreshToken(), email, true);

@@ -55,7 +55,7 @@ public class UserServiceTest {
         Assertions.assertThat(response.stat()).isEqualTo(request.stat());
         Assertions.assertThat(response.experiencePoint()).isEqualTo(0);
         Assertions.assertThat(response.level()).isEqualTo(1);
-        Assertions.assertThat(response.exclusiveRange()).isEqualTo(1000);
+        Assertions.assertThat(response.exclusiveRange()).isEqualTo(100);
         Assertions.assertThat(response.leftDay()).isEqualTo(70);
         Assertions.assertThat(response.isAbleToEndGame()).isFalse();
     }

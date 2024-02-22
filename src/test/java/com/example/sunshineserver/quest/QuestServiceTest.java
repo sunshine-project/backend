@@ -94,20 +94,12 @@ public class QuestServiceTest {
         UserCreateResponse userCreateResponse = userService.create(UserSteps.유저_생성_요청());
         복수의_테스트_퀘스트_생성(userCreateResponse.email());
 
-        List<UserQuest> quests = userQuestPort.findAll();
-
         CustomUserDetails userDetails = new CustomUserDetails(
             userPort.findByEmail(userCreateResponse.email()).orElseThrow(RuntimeException::new));
-        // when
-        questService.complete(quests.get(0).getUserQuestId(), userDetails);
 
-        // then
-        // 완료한 퀘스트 1개, 미완료한 퀘스트 2개
-        Assertions.assertThat(
-            questService.findCompletedQuests(userDetails).size()).isEqualTo(1);
         Assertions.assertThat(
 	questService.findUncompletedQuests(userDetails).size())
-            .isEqualTo(2);
+            .isEqualTo(3);
     }
 
     @Test

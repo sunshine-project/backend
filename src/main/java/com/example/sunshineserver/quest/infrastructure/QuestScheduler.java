@@ -21,7 +21,6 @@ public class QuestScheduler {
     private final QuestTemplateRepository questTemplateRepository;
     private final QuestTimer questTimer;
 
-    // 매일 자정에 실행됩니다.
     @Scheduled(cron = "${schedules.cron.reward.publish}")
     public void assignQuestDaily() {
         LocalDate currentDate = questTimer.now();

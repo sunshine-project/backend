@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.Assertions;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,9 +29,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class QuestSchedulerTest {
 
     @Autowired
-    private QuestScheduler questScheduler;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -39,8 +37,10 @@ public class QuestSchedulerTest {
     @Autowired
     private UserPort userPort;
 
-    @Autowired
-    private QuestTemplateRepository questTemplateRepository;
+    @BeforeEach
+    void setUp() {
+        userPort.deleteAll();
+    }
 
     @Test
     void 지정된_시간이_지나면_퀘스트가_자동으로_할당된다() {

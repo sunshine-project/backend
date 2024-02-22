@@ -2,9 +2,10 @@ package com.example.sunshineserver.user.application;
 
 
 import com.example.sunshineserver.auth.domain.CustomUserDetails;
+import com.example.sunshineserver.auth.domain.jwt.JwtTokenProvider;
+import com.example.sunshineserver.auth.domain.jwt.TokenInfoResponse;
 import com.example.sunshineserver.global.exception.UserAlreadyExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
-import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestRepository;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
@@ -25,14 +26,18 @@ public class UserService {
 
     private final UserPort userPort;
     private final UserQuestRepository userQuestRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public UserCreateResponse create(UserCreateRequest request) {
-        if (userPort.findByEmail(request.email()).isPresent()) {
+
+        TokenInfoResponse tokenInfoResponse = jwtTokenProvider.parse(request.accessToken());
+
+        if (userPort.findByEmail(tokenInfoResponse.email()).isPresent()) {
             throw new UserAlreadyExistedException();
         }
 
-        User user = User.of(request.email(),
+        User user = User.of(tokenInfoResponse.email(),
             request.name(),
             request.gender(),
             request.birthDay(),
@@ -41,7 +46,7 @@ public class UserService {
 
         userPort.save(user);
 
-        return UserCreateResponse.from(request.email());
+        return UserCreateResponse.from(tokenInfoResponse.email());
     }
 
     public List<User> findAllUsers() {
