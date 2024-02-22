@@ -3,11 +3,11 @@ package com.example.sunshineserver.user.domain;
 import java.util.Arrays;
 
 public enum Level {
-    LV1(1, 0, 1000),
-    LV2(2, 1000, 2500),
-    LV3(3, 2500, 4000),
-    LV4(4, 4000, 6000),
-    LV5(5, 6000, 10000);
+    LV1(1, 0, 100),
+    LV2(2, 100, 300),
+    LV3(3, 300, 650),
+    LV4(4, 650, 1200),
+    LV5(5, 1200, 10000);
 
     private final int level;
     private final int inclusiveRange;
