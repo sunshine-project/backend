@@ -1,11 +1,10 @@
 package com.example.sunshineserver.quest.infrastructure;
 
-import com.example.sunshineserver.quest.application.QuestService;
+import com.example.sunshineserver.quest.application.AssignQuestService;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.QuestTimer;
 import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
 import com.example.sunshineserver.user.application.UserService;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class QuestScheduler {
 
-    private final QuestService questService;
+    private final AssignQuestService assignQuestService;
     private final UserService userService;
     private final QuestTemplateRepository questTemplateRepository;
     private final QuestTimer questTimer;
@@ -31,8 +30,8 @@ public class QuestScheduler {
             LocalDate userCreationDate = user.getCreatedAt().toLocalDate();
             QuestTemplate questTemplate = determineQuestTemplate(userCreationDate, currentDate);
 
-            questService.assignQuest(user, questTemplate);
-            questService.assignDailyQuest(user);
+            assignQuestService.assignQuest(user, questTemplate);
+            assignQuestService.assignDailyQuest(user);
         });
     }
 
