@@ -6,6 +6,10 @@ import com.example.sunshineserver.auth.domain.jwt.JwtTokenProvider;
 import com.example.sunshineserver.auth.domain.jwt.TokenInfoResponse;
 import com.example.sunshineserver.global.exception.UserAlreadyExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
+import com.example.sunshineserver.quest.application.QuestTemplateService;
+import com.example.sunshineserver.quest.domain.QuestTemplate;
+import com.example.sunshineserver.quest.domain.UserQuest;
+import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
 import com.example.sunshineserver.quest.domain.repository.UserQuestRepository;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
@@ -26,6 +30,7 @@ public class UserService {
 
     private final UserPort userPort;
     private final UserQuestRepository userQuestRepository;
+    private final QuestTemplateService questTemplateService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -44,7 +49,8 @@ public class UserService {
             request.characterType(),
             request.stat());
 
-        userPort.save(user);
+        Long userId = userPort.save(user);
+        questTemplateService.assignInitialQuest(userId);
 
         return UserCreateResponse.from(tokenInfoResponse.email());
     }

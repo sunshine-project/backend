@@ -1,6 +1,7 @@
 package com.example.sunshineserver.quest.application;
 
 import com.example.sunshineserver.auth.domain.CustomUserDetails;
+import com.example.sunshineserver.global.exception.QuestAlreadyAssignedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
@@ -21,6 +22,8 @@ public class QuestTemplateService {
     private final UserPort userPort;
     private final UserQuestRepository userQuestRepository;
 
+    private final int initialDay = 1;
+
     public void assignQuestTemplate(int questionDay, CustomUserDetails userDetails) {
         User user = userPort.findByEmail(userDetails.getEmail())
             .orElseThrow(UserNotFoundedException::new);
@@ -29,7 +32,21 @@ public class QuestTemplateService {
             .orElseThrow(IllegalArgumentException::new);
 
         if (userQuestRepository.existsByQuestTemplateAndUser(questTemplate, user)) {
-            throw new IllegalStateException("이미 퀘스트가 할당되었습니다.");
+            throw new QuestAlreadyAssignedException();
+        }
+
+        userQuestRepository.save(UserQuest.of(questTemplate, user));
+    }
+
+    public void assignInitialQuest(Long userId) {
+        User user = userPort.findById(userId)
+            .orElseThrow(UserNotFoundedException::new);
+
+        QuestTemplate questTemplate = questTemplateRepository.findByQuestionDay(initialDay)
+            .orElseThrow(IllegalArgumentException::new);
+
+        if (userQuestRepository.existsByQuestTemplateAndUser(questTemplate, user)) {
+            throw new QuestAlreadyAssignedException();
         }
 
         userQuestRepository.save(UserQuest.of(questTemplate, user));

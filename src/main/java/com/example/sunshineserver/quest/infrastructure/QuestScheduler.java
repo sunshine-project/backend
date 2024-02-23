@@ -21,6 +21,8 @@ public class QuestScheduler {
     private final QuestTemplateRepository questTemplateRepository;
     private final QuestTimer questTimer;
 
+    private final int twoDays = 2;
+
     @Scheduled(cron = "${schedules.cron.reward.publish}")
     public void assignQuestDaily() {
         LocalDate currentDate = questTimer.now();
@@ -35,8 +37,8 @@ public class QuestScheduler {
 
     private QuestTemplate determineQuestTemplate(LocalDate userCreationDate,
         LocalDate currentDate) {
-        Period period = Period.between(userCreationDate.minusDays(1), currentDate);
-        int questionDay = period.getDays();
+        Period period = Period.between(userCreationDate, currentDate);
+        int questionDay = period.getDays() + twoDays;
 
         return questTemplateRepository.findByQuestionDay(questionDay)
             .orElseThrow(() -> new IllegalArgumentException("퀘스트 템플릿이 존재하지 않습니다."));
