@@ -13,8 +13,8 @@ public record UserHomeResponse(Long id, String name, String characterType, Stat 
 
     public static UserHomeResponse from(User user) {
 
-        int leftDay = GAME_OVER_CRITERION - Period.between(LocalDate.now(),
-	LocalDate.from(user.getCreatedAt()))
+        int leftDay = GAME_OVER_CRITERION - Period.between(
+	LocalDate.from(user.getCreatedAt()), LocalDate.now())
             .getDays();
 
         return new UserHomeResponse(user.getId(), user.getName(), user.getCharacterType().name(),

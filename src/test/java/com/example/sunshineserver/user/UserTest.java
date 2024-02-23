@@ -8,6 +8,7 @@ import com.example.sunshineserver.user.domain.Stat;
 import com.example.sunshineserver.user.domain.StatType;
 import com.example.sunshineserver.user.domain.User;
 import java.time.LocalDate;
+import java.time.Period;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +35,19 @@ public class UserTest {
             .isEqualTo(300);
         Assertions.assertThat(user.getStat().getStr())
             .isEqualTo(2);
+    }
+
+    @Test
+    void 남은_일수를_계산한다() {
+        // given
+        int GAME_OVER_CRITERION = 70;
+        LocalDate createdAt = LocalDate.of(2024, 2, 19);
+        int leftDay = GAME_OVER_CRITERION - Period.between(
+	createdAt, LocalDate.now())
+            .getDays();
+
+        // then
+        Assertions.assertThat(leftDay)
+            .isEqualTo(66);
     }
 }
