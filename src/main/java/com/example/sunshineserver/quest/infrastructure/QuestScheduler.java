@@ -31,7 +31,7 @@ public class QuestScheduler {
             QuestTemplate questTemplate = determineQuestTemplate(userCreationDate, currentDate);
 
             assignQuestService.assignQuest(user, questTemplate);
-            assignQuestService.assignDailyQuest(user);
+            assignQuestService.assignRoutineQuest(user);
         });
     }
 

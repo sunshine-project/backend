@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserQuestRepository extends JpaRepository<UserQuest, Long> {
 
-    List<UserQuest> findByUser_Id(Long userId);
+    List<UserQuest> findByUserId(Long userId);
     boolean existsByQuestTemplateAndUser(QuestTemplate questTemplate, User user);
 
     List<UserQuest> findAllByUser(User user);

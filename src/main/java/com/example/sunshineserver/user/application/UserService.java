@@ -6,10 +6,7 @@ import com.example.sunshineserver.auth.domain.jwt.JwtTokenProvider;
 import com.example.sunshineserver.auth.domain.jwt.TokenInfoResponse;
 import com.example.sunshineserver.global.exception.UserAlreadyExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
-import com.example.sunshineserver.quest.application.QuestTemplateService;
-import com.example.sunshineserver.quest.domain.QuestTemplate;
-import com.example.sunshineserver.quest.domain.UserQuest;
-import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
+import com.example.sunshineserver.quest.application.AssignQuestService;
 import com.example.sunshineserver.quest.domain.repository.UserQuestRepository;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
@@ -30,7 +27,7 @@ public class UserService {
 
     private final UserPort userPort;
     private final UserQuestRepository userQuestRepository;
-    private final QuestTemplateService questTemplateService;
+    private final AssignQuestService assignQuestService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -50,9 +47,13 @@ public class UserService {
             request.stat());
 
         Long userId = userPort.save(user);
-        questTemplateService.assignInitialQuest(userId);
+        assignInitialQuest(userId);
 
         return UserCreateResponse.from(tokenInfoResponse.email());
+    }
+
+    private void assignInitialQuest(Long userId) {
+        assignQuestService.assignInitialQuest(userId);
     }
 
     public List<User> findAllUsers() {
@@ -68,7 +69,7 @@ public class UserService {
     }
 
     public List<UserMypageResponse> findAlbum(CustomUserDetails customUserDetails) {
-        return userQuestRepository.findByUser_Id(customUserDetails.getId())
+        return userQuestRepository.findByUserId(customUserDetails.getId())
             .stream()
             .filter(u -> u.getQuestTemplate().isPhotoQuest())
             .map(m -> new UserMypageResponse(m.getQuestTemplate().getTitle(), m.getPhotoUrl()))
@@ -76,7 +77,7 @@ public class UserService {
     }
 
     public List<UserMypageResponse> findJournal(CustomUserDetails customUserDetails) {
-        return userQuestRepository.findByUser_Id(customUserDetails.getId())
+        return userQuestRepository.findByUserId(customUserDetails.getId())
             .stream()
             .filter(u -> u.getQuestTemplate().isShortAnswerQuest())
             .map(m -> new UserMypageResponse(m.getQuestTemplate().getTitle(), m.getShortAnswer()))
