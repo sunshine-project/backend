@@ -38,10 +38,14 @@ public class UserQuest extends BaseEntity {
     private String photoUrl = null;
     private String shortAnswer = null;
 
-    public void completeShortAnswer() {
+    public void complete() {
         if (isCompleted) {
             throw new QuestAlreadyCompletedException();
         }
+        if (questTemplate.isShortAnswerQuest() || questTemplate.isPhotoQuest()) {
+            throw new QuestTypeMismatchException();
+        }
+
         isCompleted = true;
         user.completeQuest(questTemplate);
     }

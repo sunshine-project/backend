@@ -4,6 +4,7 @@ import com.example.sunshineserver.auth.domain.CustomUserDetails;
 import com.example.sunshineserver.global.domain.RequestUri;
 import com.example.sunshineserver.quest.application.QuestService;
 import com.example.sunshineserver.quest.domain.UserQuest;
+import com.example.sunshineserver.quest.presentation.dto.QuestCompleteResponse;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.saramin.presentation.dto.SaraminJobResponse;
@@ -52,11 +53,11 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<Void> completeQuest(@PathVariable(name = "user_quest_id") Long questId,
+    public ResponseEntity<QuestCompleteResponse> completeQuest(
+        @PathVariable(name = "user_quest_id") Long questId,
         @AuthenticationPrincipal
         CustomUserDetails userDetails) {
-        questService.complete(questId, userDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(questService.complete(questId, userDetails), HttpStatus.OK);
     }
 
     @PostMapping("/short-answer/{user_quest_id}")
@@ -65,11 +66,12 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<String> completeShortAnswerQuest(
+    public ResponseEntity<QuestCompleteResponse> completeShortAnswerQuest(
         @PathVariable(name = "user_quest_id") Long questId,
         @RequestBody ShortAnswerQuestCompleteRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        return new ResponseEntity<>(questService.completeShortAnswerQuest(questId, request, userDetails),HttpStatus.OK);
+        return new ResponseEntity<>(
+            questService.completeShortAnswerQuest(questId, request, userDetails), HttpStatus.OK);
     }
 
     @PostMapping("/photo/{user_quest_id}")
@@ -80,7 +82,7 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<String> completePhotoQuest(
+    public ResponseEntity<QuestCompleteResponse> completePhotoQuest(
         @PathVariable(name = "user_quest_id") Long questId,
         @RequestPart(name = "photo") MultipartFile photo,
         @AuthenticationPrincipal CustomUserDetails userDetails) {

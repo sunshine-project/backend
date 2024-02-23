@@ -7,6 +7,7 @@ import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.infrastructure.PixelConverter;
+import com.example.sunshineserver.quest.presentation.dto.QuestCompleteResponse;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
 import com.example.sunshineserver.quest.presentation.dto.ShortAnswerQuestCompleteRequest;
 import com.example.sunshineserver.saramin.application.SaraminService;
@@ -46,7 +47,7 @@ public class QuestService {
     private String bucketName;
 
     @Transactional
-    public void complete(Long questId, CustomUserDetails userDetails) {
+    public QuestCompleteResponse complete(Long questId, CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
 
@@ -56,11 +57,13 @@ public class QuestService {
         if (!userQuest.isUserMatched(currentUser)) {
             throw new UserNotFoundedException();
         }
-        userQuest.completeShortAnswer();
+        userQuest.complete();
+        return new QuestCompleteResponse(currentUser.getId(), userQuest.getUserQuestId(), "");
     }
 
     @Transactional
-    public String completeShortAnswerQuest(Long questId, ShortAnswerQuestCompleteRequest request,
+    public QuestCompleteResponse completeShortAnswerQuest(Long questId,
+        ShortAnswerQuestCompleteRequest request,
         CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
@@ -73,11 +76,12 @@ public class QuestService {
         }
         userQuest.completeShortAnswer(request.answer());
 
-        return request.answer();
+        return new QuestCompleteResponse(currentUser.getId(), userQuest.getUserQuestId(),
+            request.answer());
     }
 
     @Transactional
-    public String completePhotoQuest(Long questId, MultipartFile photo,
+    public QuestCompleteResponse completePhotoQuest(Long questId, MultipartFile photo,
         CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
@@ -95,7 +99,7 @@ public class QuestService {
         uploadPixelatedImage(photo, 5, uuid, type);
         userQuest.completePhoto(uuid);
 
-        return uuid;
+        return new QuestCompleteResponse(currentUser.getId(), userQuest.getUserQuestId(), uuid);
     }
 
     private void uploadPixelatedImage(MultipartFile file, int pixSize,
