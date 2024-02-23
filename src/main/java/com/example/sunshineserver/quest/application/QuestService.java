@@ -93,7 +93,7 @@ public class QuestService {
         String uuid = UUID.randomUUID().toString();
         String type = photo.getContentType();
 
-        uploadPixelatedImage(photo, 3, uuid, type);
+        uploadPixelatedImage(photo, 5, uuid, type);
         userQuest.completePhoto(uuid);
 
         return uuid;

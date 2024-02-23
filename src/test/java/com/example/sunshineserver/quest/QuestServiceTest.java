@@ -40,7 +40,7 @@ public class QuestServiceTest {
     private UserQuestPort userQuestPort;
 
     @Autowired
-    QuestTemplateRepository questTemplateRepository;
+    private QuestTemplateRepository questTemplateRepository;
 
     @BeforeEach
     void setUp() {
