@@ -65,12 +65,11 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<Void> completeShortAnswerQuest(
+    public ResponseEntity<String> completeShortAnswerQuest(
         @PathVariable(name = "user_quest_id") Long questId,
         @RequestBody ShortAnswerQuestCompleteRequest request,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        questService.completeShortAnswerQuest(questId, request, userDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(questService.completeShortAnswerQuest(questId, request, userDetails),HttpStatus.OK);
     }
 
     @PostMapping("/photo/{user_quest_id}")
@@ -81,12 +80,12 @@ public class QuestController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "실패하였습니다."),
     })
-    public ResponseEntity<Void> completePhotoQuest(
+    public ResponseEntity<String> completePhotoQuest(
         @PathVariable(name = "user_quest_id") Long questId,
         @RequestPart(name = "photo") MultipartFile photo,
         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        questService.completePhotoQuest(questId, photo, userDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(questService.completePhotoQuest(questId, photo, userDetails)
+            , HttpStatus.OK);
     }
 
     @GetMapping("/uncompleted")

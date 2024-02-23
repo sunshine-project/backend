@@ -61,7 +61,7 @@ public class QuestService {
     }
 
     @Transactional
-    public void completeShortAnswerQuest(Long questId, ShortAnswerQuestCompleteRequest request,
+    public String completeShortAnswerQuest(Long questId, ShortAnswerQuestCompleteRequest request,
         CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
@@ -73,10 +73,12 @@ public class QuestService {
             throw new UserNotFoundedException();
         }
         userQuest.completeShortAnswer(request.answer());
+
+        return request.answer();
     }
 
     @Transactional
-    public void completePhotoQuest(Long questId, MultipartFile photo,
+    public String completePhotoQuest(Long questId, MultipartFile photo,
         CustomUserDetails userDetails) {
         User currentUser = userPort.findById(userDetails.getId())
             .orElseThrow(() -> new UserNotFoundedException());
@@ -91,8 +93,10 @@ public class QuestService {
         String uuid = UUID.randomUUID().toString();
         String type = photo.getContentType();
 
-        uploadPixelatedImage(photo, 10, uuid, type);
+        uploadPixelatedImage(photo, 3, uuid, type);
         userQuest.completePhoto(uuid);
+
+        return uuid;
     }
 
     private void uploadPixelatedImage(MultipartFile file, int pixSize,
