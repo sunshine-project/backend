@@ -17,9 +17,44 @@ public class QuestInitializer {
 
     private final QuestTemplateRepository questTemplateRepository;
 
+    private final int ROUTINE = 9001;
+    private final int SPECIAL = 9901;
+
     @PostConstruct
     @Transactional
     public void initialize() {
+        // Routine Quest
+        questTemplateRepository.save(new QuestTemplate(ROUTINE, "Wake Up Early",
+            "Start your day by waking up early in the morning.",
+            ExperiencePoint.from(5), QuestionType.ROUTINE,
+            StatInfo.of(StatType.STR, 1), null));
+
+        questTemplateRepository.save(new QuestTemplate(ROUTINE, "Make Your Bed",
+            "Begin your day with a tidy environment by making your bed.",
+            ExperiencePoint.from(5), QuestionType.ROUTINE,
+            StatInfo.of(StatType.STR, 1), null));
+
+        questTemplateRepository.save(new QuestTemplate(ROUTINE, "Brush Your Teeth",
+            "Maintain your dental hygiene by brushing your teeth.",
+            ExperiencePoint.from(5), QuestionType.ROUTINE,
+            StatInfo.of(StatType.STR, 1), null));
+
+        questTemplateRepository.save(new QuestTemplate(ROUTINE, "Do Stretching",
+            "Improve your flexibility and blood flow by doing some stretching.",
+            ExperiencePoint.from(10), QuestionType.ROUTINE,
+            StatInfo.of(StatType.STR, 1), null));
+
+        questTemplateRepository.save(new QuestTemplate(ROUTINE, "Sleep Early",
+            "Ensure a good night's sleep by going to bed early.",
+            ExperiencePoint.from(5), QuestionType.ROUTINE,
+            StatInfo.of(StatType.STR, 1), null));
+
+        questTemplateRepository.save(new QuestTemplate(ROUTINE, "Ventilate Your Room",
+            "Freshen up your living space by ventilating your room.",
+            ExperiencePoint.from(5), QuestionType.ROUTINE,
+            StatInfo.of(StatType.STR, 1), null));
+
+        // Normal Quest
         questTemplateRepository.save(new QuestTemplate(1, "Meditate for 5 Minutes",
             "Spend 5 minutes in meditation to calm your mind.",
             ExperiencePoint.from(10), QuestionType.TIMER,
@@ -27,7 +62,7 @@ public class QuestInitializer {
 
         questTemplateRepository.save(new QuestTemplate(2, "Gaze at Distant Mountains",
             "Relieve your eye strain by looking at distant scenery.",
-            ExperiencePoint.from(10), QuestionType.DAILY,
+            ExperiencePoint.from(10), QuestionType.NORMAL,
             StatInfo.of(StatType.SPI, 3), 1));
 
         questTemplateRepository.save(new QuestTemplate(3, "Take a Picture of the Sky",

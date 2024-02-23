@@ -32,6 +32,7 @@ public class QuestScheduler {
             QuestTemplate questTemplate = determineQuestTemplate(userCreationDate, currentDate);
 
             questService.assignQuest(user, questTemplate);
+            questService.assignDailyQuest(user);
         });
     }
 

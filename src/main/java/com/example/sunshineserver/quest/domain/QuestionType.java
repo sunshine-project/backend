@@ -5,5 +5,5 @@ public enum QuestionType {
     PHOTO,
     ROUTINE,
     TIMER,
-    DAILY
+    NORMAL, SPECIAL
 }

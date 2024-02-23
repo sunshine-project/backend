@@ -2,10 +2,13 @@ package com.example.sunshineserver.quest.application;
 
 import com.example.sunshineserver.auth.domain.CustomUserDetails;
 import com.example.sunshineserver.chat.application.ChatService;
+import com.example.sunshineserver.global.exception.QuestAlreadyAssignedException;
 import com.example.sunshineserver.global.exception.QuestNotExistedException;
 import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
+import com.example.sunshineserver.quest.domain.QuestionType;
 import com.example.sunshineserver.quest.domain.UserQuest;
+import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
 import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.quest.infrastructure.PixelConverter;
 import com.example.sunshineserver.quest.presentation.dto.QuestDetailResponse;
@@ -38,6 +41,7 @@ public class QuestService {
 
     private final UserQuestPort userQuestPort;
     private final UserPort userPort;
+    private final QuestTemplateRepository questTemplateRepository;
     private final PixelConverter pixelConverter;
     private final Storage storage;
     private final ChatService chatService;
@@ -154,6 +158,9 @@ public class QuestService {
 
     @Transactional
     public void assignQuest(User user, QuestTemplate questTemplate) {
+        if (userQuestPort.existsByQuestTemplateAndUser(questTemplate, user)) {
+            throw new QuestAlreadyAssignedException();
+        }
         userQuestPort.save(UserQuest.of(questTemplate, user));
     }
 
@@ -169,5 +176,14 @@ public class QuestService {
 
         SaraminJobRequest request = chatService.generateSaraminRequest(text);
         return saraminService.inquire(request);
+    }
+
+    public void assignDailyQuest(User user) {
+        List<QuestTemplate> routineQuests = questTemplateRepository.findAllByQuestionType(
+            QuestionType.ROUTINE);
+
+        for (QuestTemplate questTemplate : routineQuests) {
+            userQuestPort.save(UserQuest.of(questTemplate, user));
+        }
     }
 }

@@ -6,7 +6,7 @@ import com.example.sunshineserver.global.exception.UserNotFoundedException;
 import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.quest.domain.repository.QuestTemplateRepository;
-import com.example.sunshineserver.quest.domain.repository.UserQuestRepository;
+import com.example.sunshineserver.quest.domain.repository.UserQuestPort;
 import com.example.sunshineserver.user.domain.User;
 import com.example.sunshineserver.user.domain.repository.UserPort;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class QuestTemplateService {
 
     private final QuestTemplateRepository questTemplateRepository;
     private final UserPort userPort;
-    private final UserQuestRepository userQuestRepository;
+    private final UserQuestPort userQuestPort;
 
     private final int initialDay = 1;
 
@@ -31,11 +31,11 @@ public class QuestTemplateService {
         QuestTemplate questTemplate = questTemplateRepository.findByQuestionDay(questionDay)
             .orElseThrow(IllegalArgumentException::new);
 
-        if (userQuestRepository.existsByQuestTemplateAndUser(questTemplate, user)) {
+        if (userQuestPort.existsByQuestTemplateAndUser(questTemplate, user)) {
             throw new QuestAlreadyAssignedException();
         }
 
-        userQuestRepository.save(UserQuest.of(questTemplate, user));
+        userQuestPort.save(UserQuest.of(questTemplate, user));
     }
 
     public void assignInitialQuest(Long userId) {
@@ -45,10 +45,10 @@ public class QuestTemplateService {
         QuestTemplate questTemplate = questTemplateRepository.findByQuestionDay(initialDay)
             .orElseThrow(IllegalArgumentException::new);
 
-        if (userQuestRepository.existsByQuestTemplateAndUser(questTemplate, user)) {
+        if (userQuestPort.existsByQuestTemplateAndUser(questTemplate, user)) {
             throw new QuestAlreadyAssignedException();
         }
 
-        userQuestRepository.save(UserQuest.of(questTemplate, user));
+        userQuestPort.save(UserQuest.of(questTemplate, user));
     }
 }

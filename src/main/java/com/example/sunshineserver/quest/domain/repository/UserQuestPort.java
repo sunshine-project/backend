@@ -1,5 +1,6 @@
 package com.example.sunshineserver.quest.domain.repository;
 
+import com.example.sunshineserver.quest.domain.QuestTemplate;
 import com.example.sunshineserver.quest.domain.UserQuest;
 import com.example.sunshineserver.user.domain.User;
 import java.util.List;
@@ -18,4 +19,6 @@ public interface UserQuestPort {
     void deleteAll();
 
     List<UserQuest> findAllByUser(User user);
+
+    boolean existsByQuestTemplateAndUser(QuestTemplate questTemplate, User user);
 }
