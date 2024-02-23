@@ -1,7 +1,8 @@
 package com.example.sunshineserver.quest.domain;
 
 import com.example.sunshineserver.global.domain.BaseEntity;
-import com.example.sunshineserver.global.exception.QuestionTypeMismatchException;
+import com.example.sunshineserver.global.exception.QuestAlreadyCompletedException;
+import com.example.sunshineserver.global.exception.QuestTypeMismatchException;
 import com.example.sunshineserver.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,9 +27,11 @@ public class UserQuest extends BaseEntity {
     private Long userQuestId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "quest_template_id")
     private QuestTemplate questTemplate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     boolean isCompleted = false;
@@ -36,7 +40,7 @@ public class UserQuest extends BaseEntity {
 
     public void completeShortAnswer() {
         if (isCompleted) {
-            throw new IllegalStateException("이미 완료된 퀘스트입니다.");
+            throw new QuestAlreadyCompletedException();
         }
         isCompleted = true;
         user.completeQuest(questTemplate);
@@ -44,11 +48,11 @@ public class UserQuest extends BaseEntity {
 
     public void completeShortAnswer(String shortAnswer) {
         if (isCompleted) {
-            throw new IllegalStateException("이미 완료된 퀘스트입니다.");
+            throw new QuestAlreadyCompletedException();
         }
 
         if (!questTemplate.isShortAnswerQuest()) {
-            throw new QuestionTypeMismatchException();
+            throw new QuestTypeMismatchException();
         }
         this.isCompleted = true;
         this.shortAnswer = shortAnswer;
@@ -61,7 +65,7 @@ public class UserQuest extends BaseEntity {
         }
 
         if (!questTemplate.isPhotoQuest()) {
-            throw new QuestionTypeMismatchException();
+            throw new QuestTypeMismatchException();
         }
         this.isCompleted = true;
         this.photoUrl = photoUrl;

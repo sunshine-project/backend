@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({UserNotFoundedException.class, UserAlreadyExistedException.class,
-        QuestNotExistedException.class, QuestionTypeMismatchException.class, IOException.class, IllegalArgumentException.class})
+        QuestNotExistedException.class, QuestTypeMismatchException.class, IOException.class, IllegalArgumentException.class, QuestAlreadyCompletedException.class})
     public ResponseEntity<Object> handle() {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

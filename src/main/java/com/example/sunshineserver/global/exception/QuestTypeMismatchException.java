@@ -1,9 +1,9 @@
 package com.example.sunshineserver.global.exception;
 
-public class QuestionTypeMismatchException extends RuntimeException{
+public class QuestTypeMismatchException extends RuntimeException{
 
     private static final String MESSAGE = "Quest type mismatched";
-    public QuestionTypeMismatchException() {
+    public QuestTypeMismatchException() {
         super(MESSAGE);
     }
 }
