@@ -1,63 +1,67 @@
-## 🚀기능 구현 목록
+# Sunshine
 
-### 온보딩 
-- [x] 구글 계정으로 로그인 한다
-  - [x] id-token에서 이메일 정보를 추출한다
-  - [x] 이메일 정보를 토대로 JWT 토큰을 발급한다
-  - [x] Refresh Token으로 Access Token을 재 발급 받는다
-- [ ] 이메일로 유저가 조회되지 않으면 온보딩 과정을 진행한다
-    - [ ] 이름을 입력한다
-    - [ ] 성별을 선택한다
-    - [ ] 캐릭터를 선택한다
-    - [ ] 질문을 통해 스탯을 측정한다
-    - [x] 온보딩 결과를 토대로 유저를 생성한다
-- [ ] 이메일로 유저가 조회된다면 홈 화면으로 이동한다
+![sunshine](https://github.com/sunshine-project/.github/assets/89628690/da15e84a-00f5-44e1-ac90-d3a89a1d96ab)
 
-### 유저
-- [x] 경험치와 스탯을 증가한다 
+# SDGs' Goal
+<table>
+<tr>
+  <td><img src="https://github.com/sunshine-project/.github/assets/89628690/a24c2717-8f05-4128-81c1-60ccd440006e" alt="이미지" width="300" style="float:left; padding-right:20px;"></td>
+  <td>
+    <strong>8.5.2 Unemployment Rate</strong><br>
+    “By 2030, achieve full and productive employment and decent work for all women and men, including for young people and persons with disabilities, and equal pay for work of equal value.”
+    <br><br>
+    <strong>8.6.1 Youth employment, education and training</strong><br>
+    “By 2020, substantially reduce the proportion of youth not in employment, education or training.”
+  </td>
+</tr>
+</table>
 
-### 홈 화면
-- [x] 유저 정보를 확인한다
-    - [x] 이름, 레벨, 경험치, 스탯, 캐릭터 사진 등을 확인한다
-- [x] 플레이 완료 까지 남은 시점을 출력한다 ex) 왕국 멸망 까지 D - 70
-  - [x] 유저의 created_at을 기준으로 계산한다
-- [x] 매일 새로운 퀘스트를 할당한다
-  - [x] 매일 자정 마다 유저 생성 날짜를 기준으로 새로운 퀘스트를 할당한다
-- [x] 스크롤에서 퀘스트를 클릭하면 퀘스트 상세 화면으로 이동한다
-- [ ] 배경 화면을 변경할 수 있다
-  - [ ] Background Type을 선택한다
 
-### 퀘스트
-- [x] 퀘스트를 완료하면 경험치와 스탯이 증가한다
-- [x] 이미 완료한 퀘스트를 다시 요청한다면 예외를 발생한다
-- [x] 새로운 퀘스트들을 조회한다
-  - [x] 조회 시 isChecked 필드를 true로 변경한다
-- [x] 현재 까지 완료한 퀘스트 목록을 확인한다
-    - [x] isCompleted 가 true 인 퀘스트들을 리스트 형태로 반환한다
-- [x] 현재 까지 완료하지 않은 퀘스트 목록을 확인한다
-    - [x] isCompleted 가 false 인 퀘스트들을 리스트 형태로 반환한다
-- [x] 퀘스트 상세 내용을 조회 한다
-    - [x] 퀘스트 종류, 제목, 내용, 스탯, 경험치 등이 표시된다
-- [x] 퀘스트 타입에 따라 다른 요청을 응답받는다
-  - [X] 퀘스트 타입이 텍스트인 경우 
-  - [x] 퀘스트 타입이 이미지인 경우
-    - [x] 이미지를 픽셀로 변환한다
-- [ ] 완료하지 않은 퀘스트 개수와 true/false 로 반환한다
-- [ ] 퀘스트 스크립트를 List 타입으로 제공한다
-- [ ] 게임을 클리어 하면 마지막 미션으로 직업을 추천한다 
-  - [ ] 사람인 API를 연동한다 https://oapi.saramin.co.kr/
+# Introduction
+In modern society, the phenomenon of individuals, particularly youths, living in isolation is not just a personal issue but a significant societal challenge. Originally identified in Japan as "Hikikomori," this issue has seen a concerning rise in South Korea, largely attributed to the high youth unemployment rates and the stark disparities in working conditions between large corporations and smaller businesses. The economic and social ramifications of this issue are profound, with an estimated annual loss of 5.6 billion dollars due to the withdrawal of these young individuals from the workforce, leading to a decrease in societal vitality and potential disintegration of family structures.
 
-### 마이페이지
-- [ ] 유저 정보를 확인한다
-    - [ ] 이름, 레벨, 경험치, 스탯, 캐릭터 사진 등을 확인한다
-- [ ] 현재 까지 올렸던 사진들의 URI를 리스트 형태로 반환한다
-- [ ] 클리어한 퀘스트들을 리스트 형태로 반환한다
+Sunshine is a pioneering solution designed to address this growing concern by facilitating the reintegration of isolated youths into society. Through a 70-day program that employs a gamification approach, Sunshine aims to provide these individuals with a sense of purpose and achievement, thereby encouraging their active participation in social and economic activities.
 
-### 추가 사항 
-- [x] BaseEntity를 생성한다
-  - [x] createdAt, updatedAt 필드를 추가한다
-- [x] 도메인을 등록한다
-- [x] GCP Credit을 사용한다
-- [ ] CI/CD를 구축한다
-- [x] Docker를 사용한다
+The program is structured around four key categories:
+- Physical Health: Encouraging participants to engage in physical activities to improve their overall health and well-being.
+- Mental Strength: Fostering mental resilience and emotional stability through mindfulness and self-reflection exercises.
+- Socialization: Gradually reintroducing participants to social interactions to rebuild their confidence in engaging with others.
+- Skill Development: Offering opportunities to acquire new skills or hone existing ones to enhance their employability and personal growth.
 
+Participants embark on a variety of daily quests within these categories, each designed to promote recovery and build resilience. By completing these quests, they earn experience points and rewards, creating a continuous loop of engagement and achievement. This method not only aids in their personal development but also prepares them for reintegration into the workforce and society at large.
+
+As the program concludes, participants are not only better equipped to face the challenges of modern life but are also connected with various job opportunities, setting the stage for their next chapter in life. Sunshine thus serves as a bridge between isolated youths and a more fulfilling, engaged existence, contributing significantly to the broader goal of Decent Work and Economic Growth as outlined by the United Nations Sustainable Development Goals.
+
+In essence, Sunshine is more than just an app; it's a movement towards healing, empowerment, and societal integration, offering a beacon of hope for those who have retreated from the world. Through this innovative approach, we not only address the immediate challenge of isolation but also pave the way for a more inclusive, vibrant society where every individual has the opportunity to thrive.
+
+
+# Demo
+
+demo .gif 이 올라갈 예정
+
+# Tech Stack
+
+# ERD
+<img width="558" alt="스크린샷 2024-02-21 오후 8 50 53" src="https://github.com/sunshine-project/.github/assets/89628690/34731021-9400-4ca6-b3b8-620d518605ef">
+
+# Convention
+## Commit Convention
+| Tag      | Description                                         |
+|----------|-----------------------------------------------------|
+| `feat`   | Commits that add a new feature.                     |
+| `fix`    | Commits that fix a bug.                             |
+| `hotfix` | Fix an urgent bug in issue or QA.                   |
+| `build`  | Commits that affect build components.               |
+| `chore`  | Miscellaneous commits.                              |
+| `style`  | Commits for code styling or format.                 |
+| `docs`   | Commits that affect documentation only.             |
+| `test`   | Commits that add missing tests or correcting existing tests. |
+| `refactor`| Commits for code refactoring.                      |
+
+## Coding Convention
+*Naming Convention*
+
+Variables, Functions, and Class Names: Use camelCase. <br>
+For functions, use a verb followed by a noun (e.g., getInfo()). <br>
+Database Columns: Use snake_case (e.g., member_id). <br>
+URLs: Use kebab-case, consisting of lowercase nouns and hyphens (-) as separators (e.g., www.example.com/user). <br>
