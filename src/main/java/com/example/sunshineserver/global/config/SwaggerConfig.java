@@ -35,9 +35,6 @@ public class SwaggerConfig {
             .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
 
             .servers(List.of(
-	new Server().url("http://localhost:8080/").description("Sunshine API Server")));
-
-//            .servers(List.of(
-//	new Server().url("http://35.216.8.32:8080/").description("Sunshine API Server")));
+	new Server().url("http://35.216.8.32:8080/").description("Sunshine API Server")));
     }
 }

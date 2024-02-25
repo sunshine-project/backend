@@ -18,8 +18,9 @@ public class SaraminService {
 
     @Value("${saramin.access-key}")
     private String accessKey;
-    private final String baseUrl = "https://oapi.saramin.co.kr/job-search";
 
+    // open source library for inquiring job information
+    private final String baseUrl = "https://oapi.saramin.co.kr/job-search";
 
     public List<SaraminJobResponse> inquire(SaraminJobRequest request) {
         WebClient webClient = WebClient.create(baseUrl);
